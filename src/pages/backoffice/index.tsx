@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 const Backoffice = () => {
-  const { data, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   useEffect(() => {
     if (status === "authenticated") {
