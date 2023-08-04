@@ -1,3 +1,4 @@
+import Layout from "@/components/Layout";
 import { store } from "@/store";
 import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
@@ -8,7 +9,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider>
       <Provider store={store}>
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </Provider>
     </SessionProvider>
   );
