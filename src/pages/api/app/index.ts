@@ -6,9 +6,100 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const method = req.method;
   const isOrderAppRequest =
     req.query.locationId && !isNaN(Number(req.query.locationId));
   if (isOrderAppRequest) {
+    if (method === "GET") {
+      const locationId = Number(req.query.locationId);
+      const location = await prisma.locations.findFirst({
+        where: {
+          id: locationId,
+          isArchived: false,
+        },
+      });
+      const menusMenuCategoriesLocations =
+        await prisma.menusMenuCategoriesLocations.findMany({
+          where: {
+            locationId,
+            isArchived: false,
+          },
+        });
+      const menuIds = menusMenuCategoriesLocations.map((item) => item.menuId);
+      const menus = await prisma.menus.findMany({
+        where: {
+          id: {
+            in: menuIds,
+          },
+          isArchived: false,
+        },
+      });
+      const menuCategoryIds = menusMenuCategoriesLocations.map(
+        (item) => item.menuCategoryId
+      );
+      const menuCategories = await prisma.menuCategories.findMany({
+        where: {
+          id: {
+            in: menuCategoryIds,
+          },
+          isArchived: false,
+        },
+      });
+      const menusAddonCategories = await prisma.menusAddonCategories.findMany({
+        where: {
+          menuId: {
+            in: menuIds,
+          },
+          isArchived: false,
+        },
+      });
+      const addonCategoryIds = menusAddonCategories.map(
+        (item) => item.addonCategoryId
+      );
+      const addonCategories = await prisma.addonCategories.findMany({
+        where: {
+          id: {
+            in: addonCategoryIds,
+          },
+          isArchived: false,
+        },
+      });
+      const addons = await prisma.addons.findMany({
+        where: {
+          addonCategoryId: {
+            in: addonCategoryIds,
+          },
+          isArchived: false,
+        },
+      });
+      const orders = await prisma.orders.findMany({
+        where: {
+          locationId,
+        },
+      });
+      const orderIds = orders.map((item) => item.id);
+      const orderlines = await prisma.orderlines.findMany({
+        where: {
+          orderId: {
+            in: orderIds,
+          },
+        },
+      });
+      return res.send({
+        user: {},
+        company: {},
+        locations: [location],
+        menus,
+        menuCategories,
+        addons,
+        addonCategories,
+        menusMenuCategoriesLocations,
+        menusAddonCategories,
+        tables: [],
+        orders,
+        orderlines,
+      });
+    }
   } else {
     const session = await getSession({ req });
     if (!session) return res.status(401).send("Unathorized");
