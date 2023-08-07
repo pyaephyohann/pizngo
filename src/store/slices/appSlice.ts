@@ -17,6 +17,7 @@ import { setTables } from "./tablesSlice";
 import { setOrders } from "./ordersSlice";
 import { setOrderlines } from "./orderlinesSlice";
 import { RootState } from "..";
+import { getSelectedLocationId } from "@/utils/client";
 
 interface AppState {
   isLoading: boolean;
@@ -71,7 +72,10 @@ export const fetchAppData = createAsyncThunk(
     thunkAPI.dispatch(setOrders(orders));
     thunkAPI.dispatch(setOrderlines(orderlines));
     thunkAPI.dispatch(setAppLoading(false));
-    localStorage.setItem("selectedLocationId", locations[0].id);
+    const selectedLocationId = getSelectedLocationId();
+    if (!selectedLocationId) {
+      localStorage.setItem("selectedLocationId", locations[0].id);
+    }
   }
 );
 
