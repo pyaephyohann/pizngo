@@ -1,5 +1,9 @@
 import { config } from "@/config";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
 import { setUser } from "./userSlice";
 import { setLocations } from "./locationsSlice";
 import { setCompany } from "./companySlice";
@@ -12,6 +16,7 @@ import { setMenusMenuCategoriesLocations } from "./menusMenuCategoriesLocationsS
 import { setTables } from "./tablesSlice";
 import { setOrders } from "./ordersSlice";
 import { setOrderlines } from "./orderlinesSlice";
+import { RootState } from "..";
 
 interface AppState {
   isLoading: boolean;
@@ -67,6 +72,69 @@ export const fetchAppData = createAsyncThunk(
     thunkAPI.dispatch(setOrderlines(orderlines));
     thunkAPI.dispatch(setAppLoading(false));
     localStorage.setItem("selectedLocationId", locations[0].id);
+  }
+);
+
+export const selectUser = (state: RootState) => state.user.items;
+export const selectCompany = (state: RootState) => state.company.items;
+export const selectLocations = (state: RootState) => state.locations.items;
+export const selectMenus = (state: RootState) => state.menus.items;
+export const selectMenuCategories = (state: RootState) =>
+  state.menuCategories.items;
+export const selectAddons = (state: RootState) => state.addons.items;
+export const selectAddonCategories = (state: RootState) =>
+  state.addonCategories.items;
+export const selectMenusAddonCategories = (state: RootState) =>
+  state.menusAddonCategories.items;
+export const selectMenusMenuCategoriesLocations = (state: RootState) =>
+  state.menusMenuCategoriesLocations.items;
+export const selectTables = (state: RootState) => state.tables.items;
+export const selectOrders = (state: RootState) => state.orders.items;
+export const selectOrderlines = (state: RootState) => state.orderlines.items;
+
+export const appData = createSelector(
+  [
+    selectUser,
+    selectCompany,
+    selectLocations,
+    selectMenus,
+    selectMenuCategories,
+    selectAddons,
+    selectAddonCategories,
+    selectMenusAddonCategories,
+    selectMenusMenuCategoriesLocations,
+    selectTables,
+    selectOrders,
+    selectOrderlines,
+  ],
+  (
+    user,
+    company,
+    locations,
+    menus,
+    menuCategories,
+    addons,
+    addonCategories,
+    menusAddonCategories,
+    menusMenuCategoriesLocations,
+    tables,
+    orders,
+    orderlines
+  ) => {
+    return {
+      user,
+      company,
+      locations,
+      menus,
+      menuCategories,
+      addons,
+      addonCategories,
+      menusAddonCategories,
+      menusMenuCategoriesLocations,
+      tables,
+      orders,
+      orderlines,
+    };
   }
 );
 
