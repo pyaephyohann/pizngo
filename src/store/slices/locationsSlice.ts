@@ -32,10 +32,13 @@ export const locationsSlice = createSlice({
         item.id === action.payload.id ? action.payload : item
       );
     },
+    removeLocation: (state, action: PayloadAction<Locations>) => {
+      state.items = state.items.filter((item) => item.id !== action.payload.id);
+    },
   },
 });
 
-export const { setLocations, addLocation, updateLocation } =
+export const { setLocations, addLocation, updateLocation, removeLocation } =
   locationsSlice.actions;
 
 export default locationsSlice.reducer;

@@ -1,5 +1,6 @@
 import { prisma } from "@/utils/server";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { transpileModule } from "typescript";
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,6 +33,18 @@ export default async function handler(
       },
     });
     return res.status(200).send(updatedLocation);
+  } else if (method === "DELETE") {
+    const locationId = req.query.id;
+    if (!locationId) return res.status(400).send("Bad Request");
+    await prisma.locations.update({
+      where: {
+        id: Number(locationId),
+      },
+      data: {
+        isArchived: true,
+      },
+    });
+    return res.send(200);
   }
   res.status(405).send("Method not allowed");
 }

@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   TextField,
@@ -66,6 +67,8 @@ const NewLocation = ({ open, setOpen }: Props) => {
           sx={{ my: "1.5rem" }}
           placeholder="Address"
         />
+      </DialogContent>
+      <DialogActions>
         <Button
           onClick={handleCreateNewLocation}
           disabled={isDisabled}
@@ -74,7 +77,7 @@ const NewLocation = ({ open, setOpen }: Props) => {
         >
           Create
         </Button>
-      </DialogContent>
+      </DialogActions>
     </Dialog>
   );
 };

@@ -1,11 +1,13 @@
 import { config } from "@/config";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
-import { updateLocation } from "@/store/slices/locationsSlice";
+import { removeLocation, updateLocation } from "@/store/slices/locationsSlice";
 import { Box, Button, TextField } from "@mui/material";
 import { Locations } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteDialog from "@/components/DeleteDialog";
 
 const EditLocation = () => {
   const router = useRouter();
@@ -13,6 +15,7 @@ const EditLocation = () => {
   const [location, setLocation] = useState<Locations>();
   const { locations } = useAppSelector(appData);
   const dispatch = useAppDispatch();
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (locations.length) {
@@ -37,17 +40,35 @@ const EditLocation = () => {
     dispatch(updateLocation(updatedLocation));
   };
 
+  const handleDeleteLocation = async () => {
+    await fetch(`${config.apiBaseUrl}/locations?id=${Number(locationId)}`, {
+      method: "DELETE",
+    });
+    location && dispatch(removeLocation(location));
+    router.push("/backoffice/locations");
+  };
+
   if (!location) return null;
 
   return (
     <Box>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          onClick={() => setOpen(true)}
+          color="error"
+          variant="contained"
+          startIcon={<DeleteIcon />}
+        >
+          Delete
+        </Button>
+      </Box>
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           width: "20rem",
           ml: "2rem",
-          mt: "2rem",
+          mt: "1rem",
         }}
       >
         <TextField
@@ -75,6 +96,12 @@ const EditLocation = () => {
           Update
         </Button>
       </Box>
+      <DeleteDialog
+        title="Are you sure you want to delete this location"
+        open={open}
+        setOpen={setOpen}
+        callBack={handleDeleteLocation}
+      />
     </Box>
   );
 };
