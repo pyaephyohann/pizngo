@@ -28,6 +28,7 @@ const Locations = () => {
               key={item.id}
               icon={<LocationOnIcon sx={{ fontSize: "2.5rem" }} />}
               title={item.name}
+              href={`/backoffice/locations/${item.id}`}
             />
           );
         })}
