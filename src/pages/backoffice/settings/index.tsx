@@ -1,19 +1,43 @@
 import { config } from "@/config";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { appData } from "@/store/slices/appSlice";
+import { appData, selectLocations } from "@/store/slices/appSlice";
 import { updateCompany } from "@/store/slices/companySlice";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { Companies } from "@prisma/client";
+import { getSelectedLocationId } from "@/utils/client";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { Companies, Locations } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 const Settings = () => {
-  const { company } = useAppSelector(appData);
+  const { company, locations } = useAppSelector(appData);
   const [newCompany, setNewCompany] = useState<Companies>();
+  const [selectedLocation, setSelectedLocation] = useState<Locations>();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    if (locations.length) {
+      const selectedLocationId = getSelectedLocationId();
+      if (!selectedLocationId) {
+        localStorage.setItem("selectedLocationId", String(locations[0].id));
+        setSelectedLocation(locations[0]);
+      } else {
+        const selectedLocation = locations.find(
+          (item) => item.id === Number(selectedLocationId)
+        );
+        setSelectedLocation(selectedLocation);
+      }
+    }
     if (company) setNewCompany(company);
-  }, [company]);
+  }, [company, locations]);
 
   const isDisabled = newCompany?.name && newCompany?.address ? false : true;
 
@@ -29,15 +53,28 @@ const Settings = () => {
     dispatch(updateCompany(updatedCompany));
   };
 
+  const handleSelectLocation = (event: SelectChangeEvent<number>) => {
+    localStorage.setItem("selectedLocationId", String(event.target.value));
+    const selectedLocation = locations.find(
+      (item) => item.id === event.target.value
+    );
+    setSelectedLocation(selectedLocation);
+  };
+
   if (!company) return null;
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-evenly",
+        mt: "1rem",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           width: "15rem",
-          mt: "1rem",
         }}
       >
         <Typography variant="h5" sx={{ textAlign: "center", mb: "1.5rem" }}>
@@ -68,6 +105,27 @@ const Settings = () => {
         >
           Update
         </Button>
+      </Box>
+      <Box sx={{ width: "15rem" }}>
+        <Typography sx={{ mb: "2.5rem" }} variant="h5">
+          Select Your Location
+        </Typography>
+        <FormControl fullWidth>
+          <InputLabel>Locations</InputLabel>
+          <Select
+            value={selectedLocation ? selectedLocation.id : ""}
+            label="Locations"
+            onChange={handleSelectLocation}
+          >
+            {locations.map((item) => {
+              return (
+                <MenuItem key={item.id} value={item.id}>
+                  {item.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
       </Box>
     </Box>
   );
