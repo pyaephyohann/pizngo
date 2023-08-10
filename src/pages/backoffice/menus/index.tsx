@@ -29,7 +29,7 @@ const Menus = () => {
           Add Menu
         </Button>
       </Box>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {validMenus.map((menu) => {
           return (
             <MenuCard

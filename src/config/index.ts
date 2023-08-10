@@ -9,6 +9,9 @@ interface Config {
   messagingSenderId: string;
   appId: string;
   measurementId: string;
+  spaceEndpoint: string;
+  spaceAccessKeyId: string;
+  spaceSecretAccessKey: string;
 }
 
 export const config: Config = {
@@ -22,4 +25,7 @@ export const config: Config = {
   messagingSenderId: process.env.MESSAGING_SENDER_ID || "",
   appId: process.env.APP_ID || "",
   measurementId: process.env.MEASUREMENT_ID || "",
+  spaceAccessKeyId: process.env.SPACE_ACCESS_KEY_ID || "",
+  spaceSecretAccessKey: process.env.SPACE_SECRET_ACCESS_KEY || "",
+  spaceEndpoint: process.env.SPACE_ENDPOINT || "",
 };

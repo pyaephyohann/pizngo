@@ -1,5 +1,6 @@
+import { config } from "@/config";
 import { MenusMenuCategoriesLocations } from "@prisma/client";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface MenusMenuCategoriesLocationsState {
   isLoading: boolean;
@@ -12,6 +13,19 @@ const initialState: MenusMenuCategoriesLocationsState = {
   items: [],
   error: null,
 };
+
+export const fetchMenusMenuCategoriesLocations = createAsyncThunk(
+  "menusMenuCategoriesLocations/fetchMenusMenuCategoriesLocations",
+  async (locationId: string, thunkAPI) => {
+    const response = await fetch(
+      `${config.apiBaseUrl}/menusMenuCategoriesLocations?locationId=${locationId}`
+    );
+    const menusMenuCategoriesLocations = await response.json();
+    thunkAPI.dispatch(
+      setMenusMenuCategoriesLocations(menusMenuCategoriesLocations)
+    );
+  }
+);
 
 export const menusMenuCategoriesLocationsSlice = createSlice({
   name: "menusMenuCategoriesLocations",

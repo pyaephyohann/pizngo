@@ -20,9 +20,12 @@ export const menusSlice = createSlice({
     setMenus: (state, action: PayloadAction<Menus[]>) => {
       state.items = action.payload;
     },
+    addMenu: (state, action: PayloadAction<Menus>) => {
+      state.items = [...state.items, action.payload];
+    },
   },
 });
 
-export const { setMenus } = menusSlice.actions;
+export const { setMenus, addMenu } = menusSlice.actions;
 
 export default menusSlice.reducer;

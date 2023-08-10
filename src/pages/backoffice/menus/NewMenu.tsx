@@ -1,7 +1,10 @@
 import FileDropZone from "@/components/FileDropZone";
 import SelectMenuCategories from "@/components/SelectMenuCategories";
-import { useAppSelector } from "@/store/hooks";
+import { config } from "@/config";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
+import { fetchMenusMenuCategoriesLocations } from "@/store/slices/menusMenuCategoriesLocationsSlice";
+import { addMenu } from "@/store/slices/menusSlice";
 import {
   getMenuCategoriesByLocationId,
   getSelectedLocationId,
@@ -14,14 +17,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
   TextField,
 } from "@mui/material";
-import { Menus } from "@prisma/client";
 import { useState } from "react";
 
 interface Props {
@@ -30,9 +27,11 @@ interface Props {
 }
 
 const NewMenu = ({ open, setOpen }: Props) => {
-  const [selectedFile, setSelectedFile] = useState<File[]>();
+  const [menuImage, setMenuImage] = useState<File[]>([]);
   const { menuCategories, menusMenuCategoriesLocations } =
     useAppSelector(appData);
+
+  const dispatch = useAppDispatch();
 
   const selectedLocationId = getSelectedLocationId() as string;
 
@@ -41,8 +40,14 @@ const NewMenu = ({ open, setOpen }: Props) => {
     price: 0,
     assetUrl: "",
     menuCategoryIds: [] as number[],
-    locationId: selectedLocationId,
+    locationId: Number(selectedLocationId),
   });
+
+  const isDisabled =
+    !newMenu.name ||
+    !newMenu.price ||
+    !newMenu.menuCategoryIds.length ||
+    !newMenu.locationId;
 
   const validMenuCategories = getMenuCategoriesByLocationId(
     selectedLocationId,
@@ -56,11 +61,35 @@ const NewMenu = ({ open, setOpen }: Props) => {
   }));
 
   const onFileSelected = (acceptedFile: File[]) => {
-    setSelectedFile(acceptedFile);
+    setMenuImage(acceptedFile);
   };
 
-  const handleCreateMenu = () => {
-    console.log(newMenu);
+  const handleCreateMenu = async () => {
+    if (menuImage.length) {
+      const formData = new FormData();
+      formData.append("file", menuImage[0]);
+      const response = await fetch(`${config.apiBaseUrl}/assets`, {
+        method: "POST",
+        body: formData,
+      });
+      const responseJson = await response.json();
+      const assetUrl = responseJson.assetUrl;
+      newMenu.assetUrl = assetUrl;
+    } else {
+      newMenu.assetUrl =
+        "https://i.pinimg.com/236x/d9/8b/75/d98b759fea5cb754165ca7d26435cebc.jpg";
+    }
+    const response = await fetch(`${config.apiBaseUrl}/menus`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newMenu),
+    });
+    const createdMenu = await response.json();
+    dispatch(addMenu(createdMenu));
+    dispatch(fetchMenusMenuCategoriesLocations(selectedLocationId));
+    setOpen(false);
   };
 
   return (
@@ -92,10 +121,27 @@ const NewMenu = ({ open, setOpen }: Props) => {
         />
         <Box sx={{ mt: "1.5rem" }}>
           <FileDropZone onFileSelected={onFileSelected} />
+          <Box>
+            {menuImage.map((image) => {
+              return (
+                <Chip
+                  key={image.name}
+                  label={image.name.split(".")[0]}
+                  onDelete={() => {
+                    const filteredMenuImage = menuImage.filter(
+                      (item) => item.name !== image.name
+                    );
+                    setMenuImage(filteredMenuImage);
+                  }}
+                />
+              );
+            })}
+          </Box>
         </Box>
       </DialogContent>
       <DialogActions>
         <Button
+          disabled={isDisabled}
           sx={{ mx: "auto", mb: "0.6rem" }}
           onClick={handleCreateMenu}
           variant="contained"

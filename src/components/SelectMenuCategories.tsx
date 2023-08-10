@@ -29,6 +29,7 @@ const SelectMenuCategories = ({ options, defaultValue, onChange }: Props) => {
       renderOption={(props, option, { selected }) => (
         <li {...props} key={option.id}>
           <Checkbox
+            key={option.id}
             icon={icon}
             checkedIcon={checkedIcon}
             style={{ marginRight: 8 }}
