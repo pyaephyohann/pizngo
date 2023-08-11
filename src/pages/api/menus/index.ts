@@ -115,6 +115,19 @@ export default async function handler(
       }
     }
     return res.status(200).send(updatedMenu);
+  } else if (method === "DELETE") {
+    const menuId = req.query.menuId;
+    const isValid = menuId;
+    if (!isValid) return res.status(400).send("Bad Request");
+    await prisma.menus.update({
+      where: {
+        id: Number(menuId),
+      },
+      data: {
+        isArchived: true,
+      },
+    });
+    return res.status(200).send("ok");
   }
   res.status(405).send("Method not allowed");
 }
