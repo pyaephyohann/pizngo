@@ -1,6 +1,8 @@
 import {
+  AddonCategories,
   MenuCategories,
   Menus,
+  MenusAddonCategories,
   MenusMenuCategoriesLocations,
 } from "@prisma/client";
 
@@ -32,5 +34,18 @@ export const getMenuCategoriesByLocationId = (
     .map((item) => item.menuCategoryId);
   return menuCategories.filter((item) =>
     validMenuCategoryIds.includes(item.id)
+  );
+};
+
+export const getAddonCategoriesByMenuId = (
+  menuId: string,
+  menusAddonCategories: MenusAddonCategories[],
+  addonCategories: AddonCategories[]
+) => {
+  const validAddonCategoryIds = menusAddonCategories
+    .filter((item) => item.menuId === Number(menuId))
+    .map((item) => item.addonCategoryId);
+  return addonCategories.filter((item) =>
+    validAddonCategoryIds.includes(item.id)
   );
 };

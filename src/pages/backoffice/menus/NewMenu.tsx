@@ -121,7 +121,7 @@ const NewMenu = ({ open, setOpen }: Props) => {
         />
         <Box sx={{ mt: "1.5rem" }}>
           <FileDropZone onFileSelected={onFileSelected} />
-          <Box>
+          <Box sx={{ mt: "1rem" }}>
             {menuImage.map((image) => {
               return (
                 <Chip
