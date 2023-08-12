@@ -25,7 +25,9 @@ export default async function handler(
             isArchived: false,
           },
         });
-      const menuIds = menusMenuCategoriesLocations.map((item) => item.menuId);
+      const menuIds = menusMenuCategoriesLocations
+        .map((item) => item.menuId)
+        .filter((item) => item !== null) as number[];
       const menus = await prisma.menus.findMany({
         where: {
           id: {
@@ -256,7 +258,9 @@ export default async function handler(
           isArchived: false,
         },
       });
-      const menuIds = menusMenuCategoriesLocations.map((item) => item.menuId);
+      const menuIds = menusMenuCategoriesLocations
+        .map((item) => item.menuId)
+        .filter((item) => item !== null) as number[];
       const menus = await prisma.menus.findMany({
         where: {
           id: {

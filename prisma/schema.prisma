@@ -115,8 +115,8 @@ model MenusAddonCategories {
 
 model MenusMenuCategoriesLocations {
   id             Int            @id @default(autoincrement())
-  menuId         Int
-  menu           Menus          @relation(fields: [menuId], references: [id])
+  menuId         Int?
+  menu           Menus?         @relation(fields: [menuId], references: [id])
   menuCategoryId Int
   menuCategory   MenuCategories @relation(fields: [menuCategoryId], references: [id])
   locationId     Int
