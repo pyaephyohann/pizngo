@@ -10,6 +10,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import NewMenuCategory from "./NewMenuCategory";
+import { MenusMenuCategoriesLocations } from "@prisma/client";
 
 const MenuCategories = () => {
   const { menuCategories, menusMenuCategoriesLocations } =
@@ -28,7 +29,7 @@ const MenuCategories = () => {
   const getMenusCount = (menuCategoryId?: number) => {
     if (!menuCategoryId) return 0;
     return menusMenuCategoriesLocations.filter(
-      (item) =>
+      (item: MenusMenuCategoriesLocations) =>
         item.menuCategoryId === menuCategoryId &&
         item.menuId &&
         item.locationId === Number(selectedLocationId)

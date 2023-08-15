@@ -10,7 +10,14 @@ import {
   getMenusByMenuCategoryId,
   getSelectedLocationId,
 } from "@/utils/client";
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -18,6 +25,7 @@ import { useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import AddIcon from "@mui/icons-material/Add";
 import AddMenuToMenuCategory from "./AddMenuToMenuCategory";
+import { MenuCategories } from "@prisma/client";
 
 const EditMenuCategory = () => {
   const router = useRouter();
@@ -32,7 +40,7 @@ const EditMenuCategory = () => {
   const menuCategoryId = router.query.id as string;
 
   const menuCategory = menuCategories.find(
-    (item) => item.id === Number(menuCategoryId)
+    (item: MenuCategories) => item.id === Number(menuCategoryId)
   );
 
   const [updatedMenuCategoryName, setUpdatedMenuCategoryName] = useState("");
@@ -156,16 +164,30 @@ const EditMenuCategory = () => {
           {validMenus.map((item) => {
             return (
               <Box key={item.id} sx={{ position: "relative", m: "1rem" }}>
-                <Image
-                  src={item.assetUrl || ""}
-                  alt={item.name}
-                  width={180}
-                  height={150}
-                  style={{ borderRadius: "1rem" }}
-                />
-                <IconButton sx={{ position: "absolute", top: "0", right: "0" }}>
-                  <CancelIcon />
-                </IconButton>
+                <Paper elevation={3} sx={{ p: "1rem" }}>
+                  <Image
+                    src={item.assetUrl || ""}
+                    alt={item.name}
+                    width={180}
+                    height={150}
+                    style={{ borderRadius: "0.8rem", marginTop: "1rem" }}
+                  />
+                  <IconButton
+                    sx={{ position: "absolute", top: "0", right: "0" }}
+                  >
+                    <CancelIcon />
+                  </IconButton>
+
+                  <Typography
+                    sx={{
+                      textAlign: "center",
+                      mt: "0.6rem",
+                      fontSize: "1.2rem",
+                    }}
+                  >
+                    {item.name}
+                  </Typography>
+                </Paper>
               </Box>
             );
           })}
