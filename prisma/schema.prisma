@@ -119,8 +119,8 @@ model MenusMenuCategoriesLocations {
   menu           Menus?         @relation(fields: [menuId], references: [id])
   menuCategoryId Int
   menuCategory   MenuCategories @relation(fields: [menuCategoryId], references: [id])
-  locationId     Int
-  location       Locations      @relation(fields: [locationId], references: [id])
+  locationId     Int?
+  location       Locations?      @relation(fields: [locationId], references: [id])
   isArchived     Boolean        @default(false)
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @default(now()) @updatedAt

@@ -51,6 +51,7 @@ const MenuCategories = () => {
           return (
             <ItemCard
               key={item.id}
+              href={`/backoffice/menuCategories/${item.id}`}
               icon={<CategoryIcon sx={{ fontSize: "2.5rem" }} />}
               title={item.name}
               subTitle={`${getMenusCount(item.id)} Menus`}

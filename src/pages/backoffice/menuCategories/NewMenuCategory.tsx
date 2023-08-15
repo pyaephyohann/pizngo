@@ -1,4 +1,4 @@
-import SelectLocations from "@/components/SelectLocations";
+import ItemsSelector from "@/components/ItemsSelector";
 import { config } from "@/config";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
@@ -67,7 +67,9 @@ const NewMenuCategory = ({ open, setOpen }: Props) => {
           placeholder="Name"
         />
         <Box sx={{ mt: "1.5rem" }}>
-          <SelectLocations
+          <ItemsSelector
+            label="Location"
+            placeholder="Location"
             options={mappedLocations}
             onChange={(values) => {
               setNewMenuCategory({
