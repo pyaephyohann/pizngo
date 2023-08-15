@@ -64,7 +64,7 @@ export const getMenusByMenuCategoryId = (
         item.menuId &&
         item.locationId === Number(selectedLocationId)
     )
-    .map((item) => item.id);
+    .map((item) => item.menuId);
   return menus.filter((item) => validMenuIds.includes(item.id));
 };
 
