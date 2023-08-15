@@ -25,7 +25,8 @@ import { useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import AddIcon from "@mui/icons-material/Add";
 import AddMenuToMenuCategory from "./AddMenuToMenuCategory";
-import { MenuCategories } from "@prisma/client";
+import { MenuCategories, Menus } from "@prisma/client";
+import RemoveMenuFromMenuCategory from "./RemoveMenuFromMenuCategory";
 
 const EditMenuCategory = () => {
   const router = useRouter();
@@ -33,6 +34,10 @@ const EditMenuCategory = () => {
   const dispatch = useAppDispatch();
 
   const [openAdd, setOpenAdd] = useState<boolean>(false);
+
+  const [openRemove, setOpenRemove] = useState<boolean>(false);
+
+  const [selectedMenuToRemove, setSelectedMenuToRemove] = useState<Menus>();
 
   const { menuCategories, menus, menusMenuCategoriesLocations, locations } =
     useAppSelector(appData);
@@ -173,6 +178,10 @@ const EditMenuCategory = () => {
                     style={{ borderRadius: "0.8rem", marginTop: "1rem" }}
                   />
                   <IconButton
+                    onClick={() => {
+                      setSelectedMenuToRemove(item);
+                      setOpenRemove(true);
+                    }}
                     sx={{ position: "absolute", top: "0", right: "0" }}
                   >
                     <CancelIcon />
@@ -198,6 +207,12 @@ const EditMenuCategory = () => {
         openAdd={openAdd}
         setOpenAdd={setOpenAdd}
         menus={mappedInvalidMenus}
+      />
+      <RemoveMenuFromMenuCategory
+        open={openRemove}
+        setOpen={setOpenRemove}
+        menu={selectedMenuToRemove}
+        menuCategoryId={Number(menuCategoryId)}
       />
     </Box>
   );
