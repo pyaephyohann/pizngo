@@ -25,9 +25,20 @@ const ItemCard = ({ icon, title, subTitle, href }: Props) => {
           elevation={3}
         >
           <Box>{icon}</Box>
-          <Box sx={{ mt: "1rem" }}>
-            <Typography>{title}</Typography>
-            {subTitle && <Typography>{subTitle}</Typography>}
+          <Box
+            sx={{
+              mt: "1.2rem",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Typography sx={{ mb: "0.5rem", fontSize: "1.1rem" }}>
+              {title}
+            </Typography>
+            {subTitle && (
+              <Typography sx={{ fontSize: "1rem" }}>{subTitle}</Typography>
+            )}
           </Box>
         </Paper>
       </Link>

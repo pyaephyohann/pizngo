@@ -1,5 +1,5 @@
 import FileDropZone from "@/components/FileDropZone";
-import SelectMenuCategories from "@/components/SelectMenuCategories";
+import ItemsSelector from "@/components/ItemsSelector";
 import { config } from "@/config";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
@@ -110,7 +110,9 @@ const NewMenu = ({ open, setOpen }: Props) => {
           type="number"
           placeholder="Price"
         />
-        <SelectMenuCategories
+        <ItemsSelector
+          label="MenuCategory"
+          placeholder="MenuCategory"
           options={mappedValidMenuCategories}
           onChange={(values) =>
             setNewMenu({

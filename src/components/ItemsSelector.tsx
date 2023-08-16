@@ -14,9 +14,17 @@ interface Props {
   options: Option[];
   defaultValue?: Option[];
   onChange: (options: Option[]) => void;
+  label: string;
+  placeholder: string;
 }
 
-const SelectMenuCategories = ({ options, defaultValue, onChange }: Props) => {
+const ItemsSelector = ({
+  options,
+  defaultValue,
+  onChange,
+  label,
+  placeholder,
+}: Props) => {
   return (
     <Autocomplete
       multiple
@@ -40,14 +48,10 @@ const SelectMenuCategories = ({ options, defaultValue, onChange }: Props) => {
       )}
       style={{ width: "20rem" }}
       renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Menu Categories"
-          placeholder="Menu Categories"
-        />
+        <TextField {...params} label={label} placeholder={placeholder} />
       )}
     />
   );
 };
 
-export default SelectMenuCategories;
+export default ItemsSelector;
