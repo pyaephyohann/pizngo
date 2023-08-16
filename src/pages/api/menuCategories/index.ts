@@ -99,6 +99,19 @@ export default async function handler(
       }
     }
     return res.status(200).send(updatedMenuCategory);
+  } else if (method === "DELETE") {
+    const menuCategoryId = req.query.menuCategoryId;
+    const isValid = menuCategoryId;
+    if (!isValid) return res.status(400).send("Bad Request");
+    await prisma.menuCategories.update({
+      where: {
+        id: Number(menuCategoryId),
+      },
+      data: {
+        isArchived: true,
+      },
+    });
+    return res.status(200).send("ok");
   }
   res.status(405).send("Method not allowed");
 }
