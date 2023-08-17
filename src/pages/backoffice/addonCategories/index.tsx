@@ -2,11 +2,15 @@ import ItemCard from "@/components/ItemCard";
 import { useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
 import { getSelectedLocationId } from "@/utils/client";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import ClassIcon from "@mui/icons-material/Class";
+import AddIcon from "@mui/icons-material/Add";
+import { useState } from "react";
+import NewAddonCategory from "./NewAddonCategory";
 
 const AddonCategories = () => {
   const selectedLocationId = getSelectedLocationId();
+
   const {
     menusMenuCategoriesLocations,
     menus,
@@ -14,6 +18,9 @@ const AddonCategories = () => {
     addonCategories,
     addons,
   } = useAppSelector(appData);
+
+  const [open, setOpen] = useState<boolean>(false);
+
   const validMenuIds = menusMenuCategoriesLocations
     .filter(
       (item) => item.menuId && item.locationId === Number(selectedLocationId)
@@ -36,6 +43,20 @@ const AddonCategories = () => {
 
   return (
     <Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Button
+          onClick={() => setOpen(true)}
+          variant="contained"
+          startIcon={<AddIcon />}
+        >
+          New Addon Category
+        </Button>
+      </Box>
       <Box sx={{ display: "flex" }}>
         {validAddonCategories.map((item) => {
           return (
@@ -49,6 +70,7 @@ const AddonCategories = () => {
           );
         })}
       </Box>
+      <NewAddonCategory open={open} setOpen={setOpen} />
     </Box>
   );
 };

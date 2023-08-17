@@ -20,9 +20,13 @@ export const addonCategoriesSlice = createSlice({
     setAddonCategories: (state, action) => {
       state.items = action.payload;
     },
+    addAddonCategory: (state, action: PayloadAction<AddonCategories>) => {
+      state.items = [...state.items, action.payload];
+    },
   },
 });
 
-export const { setAddonCategories } = addonCategoriesSlice.actions;
+export const { setAddonCategories, addAddonCategory } =
+  addonCategoriesSlice.actions;
 
 export default addonCategoriesSlice.reducer;
