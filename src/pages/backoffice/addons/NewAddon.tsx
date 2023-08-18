@@ -43,7 +43,7 @@ const NewAddon = ({ open, setOpen }: Props) => {
     });
     const createdAddon = await response.json();
     dispatch(addAddon(createdAddon));
-    setNewAddon({ ...newAddon, name: "" });
+    setNewAddon({ ...newAddon, name: "", price: 0 });
     setOpen(false);
   };
 
