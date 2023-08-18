@@ -24,6 +24,32 @@ export default async function handler(
       data: newMenusAddonCategoriesData,
     });
     return res.status(200).send(createdAddonCategory);
+  } else if (method === "PUT") {
+    const { id, name, isRequired } = req.body;
+    const isValid = id;
+    if (!isValid) return res.status(400).send("Bad Request");
+    let updatedAddonCategory = {};
+    if (name) {
+      updatedAddonCategory = await prisma.addonCategories.update({
+        where: {
+          id,
+        },
+        data: {
+          name,
+        },
+      });
+    }
+    if (isRequired) {
+      updatedAddonCategory = await prisma.addonCategories.update({
+        where: {
+          id,
+        },
+        data: {
+          isRequired,
+        },
+      });
+    }
+    return res.status(200).send(updatedAddonCategory);
   }
   res.status(405).send("Method not allowed");
 }
