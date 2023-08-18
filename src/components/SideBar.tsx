@@ -47,7 +47,7 @@ const SideBar = () => {
       id: 5,
       label: "Addon Categories",
       icon: <ClassIcon />,
-      route: "/backoffice/orders",
+      route: "/backoffice/addonCategories",
     },
     {
       id: 6,

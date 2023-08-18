@@ -104,8 +104,14 @@ const EditMenuCategory = () => {
       }),
     });
     const updatedMenuCategory = await response.json();
-    dispatch(updateMenuCategory(updatedMenuCategory));
+
     dispatch(fetchMenusMenuCategoriesLocations(selectedLocationId));
+
+    const isEmptyUpdatedMenuCategory =
+      Object.keys(updatedMenuCategory).length === 0;
+    if (isEmptyUpdatedMenuCategory) return;
+
+    dispatch(updateMenuCategory(updatedMenuCategory));
   };
 
   const handleDeleteMenuCategory = async () => {
