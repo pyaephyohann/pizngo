@@ -50,6 +50,19 @@ export default async function handler(
       });
     }
     return res.status(200).send(updatedAddonCategory);
+  } else if (method === "DELETE") {
+    const addonCategoryId = req.query.id;
+    const isValid = addonCategoryId;
+    if (!isValid) return res.status(400).send("Bad Request");
+    await prisma.addonCategories.update({
+      where: {
+        id: Number(addonCategoryId),
+      },
+      data: {
+        isArchived: true,
+      },
+    });
+    return res.status(200).send("Ok");
   }
   res.status(405).send("Method not allowed");
 }

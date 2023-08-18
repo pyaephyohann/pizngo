@@ -1,6 +1,9 @@
 import { config } from "@/config";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { updateAddonCategory } from "@/store/slices/addonCategoriesSlice";
+import {
+  deleteAddonCategory,
+  updateAddonCategory,
+} from "@/store/slices/addonCategoriesSlice";
 import { appData } from "@/store/slices/appSlice";
 import {
   Box,
@@ -13,6 +16,8 @@ import {
 import { AddonCategories } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteDialog from "@/components/DeleteDialog";
 
 const EditAddonCategory = () => {
   const router = useRouter();
@@ -23,6 +28,8 @@ const EditAddonCategory = () => {
   const dispatch = useAppDispatch();
 
   const [addonCategory, setAddonCategory] = useState<AddonCategories>();
+
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (addonCategories.length) {
@@ -48,6 +55,14 @@ const EditAddonCategory = () => {
     dispatch(updateAddonCategory(updatedAddonCategory));
   };
 
+  const handleDeleteAddonCategory = async () => {
+    await fetch(`${config.apiBaseUrl}/addonCategories?id=${addonCategoryId}`, {
+      method: "DELETE",
+    });
+    addonCategory && dispatch(deleteAddonCategory(addonCategory));
+    router.push("/backoffice/addonCategories");
+  };
+
   if (!addonCategory)
     return (
       <Box>
@@ -57,6 +72,16 @@ const EditAddonCategory = () => {
 
   return (
     <Box>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          onClick={() => setOpen(true)}
+          variant="contained"
+          color="error"
+          startIcon={<DeleteIcon />}
+        >
+          Delete
+        </Button>
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -95,6 +120,12 @@ const EditAddonCategory = () => {
           Update
         </Button>
       </Box>
+      <DeleteDialog
+        open={open}
+        setOpen={setOpen}
+        callBack={handleDeleteAddonCategory}
+        title="Are you sure you want to delete this addon category?"
+      />
     </Box>
   );
 };
