@@ -2,14 +2,19 @@ import ItemCard from "@/components/ItemCard";
 import { useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
 import { getAddonsByLocationId, getSelectedLocationId } from "@/utils/client";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import EggIcon from "@mui/icons-material/Egg";
+import AddIcon from "@mui/icons-material/Add";
+import { useState } from "react";
+import NewAddon from "./NewAddon";
 
 const Addons = () => {
   const { addons, menusAddonCategories, menusMenuCategoriesLocations } =
     useAppSelector(appData);
 
   const selectedLocationId = getSelectedLocationId() as string;
+
+  const [open, setOpen] = useState<boolean>(false);
 
   const validAddons = getAddonsByLocationId(
     addons,
@@ -20,7 +25,16 @@ const Addons = () => {
 
   return (
     <Box>
-      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          onClick={() => setOpen(true)}
+          variant="contained"
+          startIcon={<AddIcon />}
+        >
+          New Addon
+        </Button>
+      </Box>
+      <Box sx={{ display: "flex", flexWrap: "wrap", mt: "1rem" }}>
         {validAddons.map((item) => {
           return (
             <ItemCard
@@ -33,6 +47,7 @@ const Addons = () => {
           );
         })}
       </Box>
+      <NewAddon open={open} setOpen={setOpen} />
     </Box>
   );
 };

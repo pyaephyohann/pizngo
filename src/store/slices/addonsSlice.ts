@@ -20,9 +20,12 @@ export const addonsSlice = createSlice({
     setAddons: (state, action: PayloadAction<Addons[]>) => {
       state.items = action.payload;
     },
+    addAddon: (state, action: PayloadAction<Addons>) => {
+      state.items = [...state.items, action.payload];
+    },
   },
 });
 
-export const { setAddons } = addonsSlice.actions;
+export const { setAddons, addAddon } = addonsSlice.actions;
 
 export default addonsSlice.reducer;
