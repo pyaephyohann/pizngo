@@ -20,9 +20,21 @@ export const tablesSlice = createSlice({
     setTables: (state, action: PayloadAction<Tables[]>) => {
       state.items = action.payload;
     },
+    addTable: (state, action: PayloadAction<Tables>) => {
+      state.items = [...state.items, action.payload];
+    },
+    updateTable: (state, action: PayloadAction<Tables>) => {
+      state.items = state.items.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
+    deleteTable: (state, action: PayloadAction<Tables>) => {
+      state.items = state.items.filter((item) => item.id !== action.payload.id);
+    },
   },
 });
 
-export const { setTables } = tablesSlice.actions;
+export const { setTables, addTable, updateTable, deleteTable } =
+  tablesSlice.actions;
 
 export default tablesSlice.reducer;
