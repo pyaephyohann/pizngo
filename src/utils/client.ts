@@ -113,3 +113,7 @@ export const getAddonCategoriesByLocationId = (
     validAddonCategoryIds.includes(item.id)
   );
 };
+
+export const getQrCodeUrl = (locationId: number, tableId: number) => {
+  return `https://msquarefdc.sgp1.cdn.digitaloceanspaces.com/msquarefdc/qrcode/batch1/pyaephyohan/locationId-${locationId}-tableId-${tableId}.png`;
+};

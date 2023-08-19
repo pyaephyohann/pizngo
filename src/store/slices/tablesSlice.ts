@@ -20,9 +20,12 @@ export const tablesSlice = createSlice({
     setTables: (state, action: PayloadAction<Tables[]>) => {
       state.items = action.payload;
     },
+    addTable: (state, action: PayloadAction<Tables>) => {
+      state.items = [...state.items, action.payload];
+    },
   },
 });
 
-export const { setTables } = tablesSlice.actions;
+export const { setTables, addTable } = tablesSlice.actions;
 
 export default tablesSlice.reducer;
