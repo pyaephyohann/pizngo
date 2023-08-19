@@ -40,6 +40,15 @@ export default async function handler(
       });
     }
     return res.status(200).send(updatedTable);
+  } else if (method === "DELETE") {
+    const tableId = req.query.id;
+    const isValid = tableId;
+    if (!isValid) return res.status(400).send("Bad Request");
+    await prisma.tables.update({
+      where: { id: Number(tableId) },
+      data: { isArchived: true },
+    });
+    return res.status(200).send("ok");
   }
   res.status(405).send("Method not allowed");
 }

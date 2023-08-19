@@ -1,11 +1,13 @@
 import { config } from "@/config";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
-import { updateTable } from "@/store/slices/tablesSlice";
+import { deleteTable, updateTable } from "@/store/slices/tablesSlice";
 import { Box, Button, TextField } from "@mui/material";
 import { Tables } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteDialog from "@/components/DeleteDialog";
 
 const EditTable = () => {
   const router = useRouter();
@@ -17,6 +19,8 @@ const EditTable = () => {
   const table = tables.find((item) => item.id === Number(tableId)) as Tables;
 
   const [tableName, setTableName] = useState(table?.name);
+
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleUpdateTable = async () => {
     const response = await fetch(`${config.apiBaseUrl}/tables`, {
@@ -32,10 +36,28 @@ const EditTable = () => {
     dispatch(updateTable(updatedTable));
   };
 
+  const handleDeleteTable = async () => {
+    await fetch(`${config.apiBaseUrl}/tables?id=${tableId}`, {
+      method: "DELETE",
+    });
+    dispatch(deleteTable(table));
+    router.push("/backoffice/tables");
+  };
+
   if (!table) return <Box>Table not found</Box>;
 
   return (
     <Box>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          onClick={() => setOpen(true)}
+          color="error"
+          variant="contained"
+          startIcon={<DeleteIcon />}
+        >
+          Delete
+        </Button>
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -55,6 +77,12 @@ const EditTable = () => {
           Update
         </Button>
       </Box>
+      <DeleteDialog
+        title="Are you sure you want to delete this table"
+        open={open}
+        setOpen={setOpen}
+        callBack={handleDeleteTable}
+      />
     </Box>
   );
 };
