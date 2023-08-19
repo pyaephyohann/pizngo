@@ -1,5 +1,6 @@
 import {
   AddonCategories,
+  Addons,
   Locations,
   MenuCategories,
   Menus,
@@ -77,4 +78,38 @@ export const getLocationsByMenuCategoryId = (
     .filter((item) => item.menuCategoryId === Number(menuCategoryId))
     .map((item) => item.locationId);
   return locations.filter((item) => validLocationIds.includes(item.id));
+};
+
+export const getAddonsByLocationId = (
+  addons: Addons[],
+  menusAddonCategories: MenusAddonCategories[],
+  menusMenuCategoriesLocations: MenusMenuCategoriesLocations[],
+  locationId: string
+) => {
+  const validMenuIds = menusMenuCategoriesLocations
+    .filter((item) => item.menuId && item.locationId === Number(locationId))
+    .map((item) => item.menuId);
+  const validAddonCategoryIds = menusAddonCategories
+    .filter((item) => validMenuIds.includes(item.menuId))
+    .map((item) => item.addonCategoryId);
+  return addons.filter((item) =>
+    validAddonCategoryIds.includes(item.addonCategoryId)
+  );
+};
+
+export const getAddonCategoriesByLocationId = (
+  addonCategories: AddonCategories[],
+  menusAddonCategories: MenusAddonCategories[],
+  menusMenuCategoriesLocations: MenusMenuCategoriesLocations[],
+  locationId: string
+) => {
+  const validMenuIds = menusMenuCategoriesLocations
+    .filter((item) => item.locationId === Number(locationId))
+    .map((item) => item.menuId);
+  const validAddonCategoryIds = menusAddonCategories
+    .filter((item) => validMenuIds.includes(item.menuId))
+    .map((item) => item.addonCategoryId);
+  return addonCategories.filter((item) =>
+    validAddonCategoryIds.includes(item.id)
+  );
 };
