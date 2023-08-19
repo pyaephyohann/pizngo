@@ -55,6 +55,19 @@ export default async function handler(
       },
     });
     return res.status(200).send(updatedAddon);
+  } else if (method === "DELETE") {
+    const addonId = req.query.id;
+    const isValid = addonId;
+    if (!isValid) return res.status(400).send("Bad Request");
+    await prisma.addons.update({
+      where: {
+        id: Number(addonId),
+      },
+      data: {
+        isArchived: true,
+      },
+    });
+    return res.status(200).send("Ok");
   }
   res.status(405).send("Method not allowed");
 }

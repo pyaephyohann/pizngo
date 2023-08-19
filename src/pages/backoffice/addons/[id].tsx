@@ -1,6 +1,6 @@
 import { config } from "@/config";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { updateAddon } from "@/store/slices/addonsSlice";
+import { deleteAddon, updateAddon } from "@/store/slices/addonsSlice";
 import { appData } from "@/store/slices/appSlice";
 import {
   getAddonCategoriesByLocationId,
@@ -18,6 +18,8 @@ import {
 import { Addons } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteDialog from "@/components/DeleteDialog";
 
 const EditAddon = () => {
   const router = useRouter();
@@ -43,6 +45,8 @@ const EditAddon = () => {
 
   const [addon, setAddon] = useState<Addons>();
 
+  const [open, setOpen] = useState<boolean>(false);
+
   const handleUpdateAddon = async () => {
     const response = await fetch(`${config.apiBaseUrl}/addons`, {
       method: "PUT",
@@ -53,6 +57,14 @@ const EditAddon = () => {
     });
     const updatedAddon = await response.json();
     dispatch(updateAddon(updatedAddon));
+  };
+
+  const handleDeleteAddon = async () => {
+    await fetch(`${config.apiBaseUrl}/addons?id=${addonId}`, {
+      method: "DELETE",
+    });
+    addon && dispatch(deleteAddon(addon));
+    router.push("/backoffice/addons");
   };
 
   useEffect(() => {
@@ -66,6 +78,21 @@ const EditAddon = () => {
 
   return (
     <Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Button
+          onClick={() => setOpen(true)}
+          color="error"
+          variant="contained"
+          startIcon={<DeleteIcon />}
+        >
+          Delete
+        </Button>
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -120,6 +147,12 @@ const EditAddon = () => {
           Update
         </Button>
       </Box>
+      <DeleteDialog
+        title="Are you sure you want to delete this addon?"
+        open={open}
+        setOpen={setOpen}
+        callBack={handleDeleteAddon}
+      />
     </Box>
   );
 };
