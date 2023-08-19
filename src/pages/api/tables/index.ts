@@ -28,6 +28,18 @@ export default async function handler(
       },
     });
     return res.status(200).send(createdTable);
+  } else if (method === "PUT") {
+    const { id, name } = req.body;
+    const isValid = id;
+    if (!isValid) return res.status(400).send("Bad Request");
+    let updatedTable = {};
+    if (name) {
+      updatedTable = await prisma.tables.update({
+        where: { id },
+        data: { name },
+      });
+    }
+    return res.status(200).send(updatedTable);
   }
   res.status(405).send("Method not allowed");
 }
