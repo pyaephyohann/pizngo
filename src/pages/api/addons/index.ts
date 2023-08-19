@@ -19,6 +19,42 @@ export default async function handler(
       },
     });
     return res.status(200).send(createdAddon);
+  } else if (method === "PUT") {
+    const { id, name, price, addonCategoryId } = req.body;
+    const isValid = id;
+    if (!isValid) return res.status(400).send("Bad Request");
+    const existingAddon = await prisma.addons.findFirst({
+      where: {
+        id,
+      },
+    });
+    const existingAddonCategoryId = existingAddon?.addonCategoryId;
+    let updatedAddon = {};
+    if (name) {
+      updatedAddon = await prisma.addons.update({
+        where: {
+          id,
+        },
+        data: {
+          name,
+        },
+      });
+    }
+    const newPrice = price ? price : 0;
+    updatedAddon = await prisma.addons.update({
+      where: { id },
+      data: { price: newPrice },
+    });
+    const newAddonCategoryId = addonCategoryId
+      ? addonCategoryId
+      : existingAddonCategoryId;
+    updatedAddon = await prisma.addons.update({
+      where: { id },
+      data: {
+        addonCategoryId: newAddonCategoryId,
+      },
+    });
+    return res.status(200).send(updatedAddon);
   }
   res.status(405).send("Method not allowed");
 }
