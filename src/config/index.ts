@@ -13,6 +13,7 @@ interface Config {
   spaceAccessKeyId: string;
   spaceSecretAccessKey: string;
   orderAppUrl: string;
+  nextAuthSecret: string;
 }
 
 export const config: Config = {
@@ -30,4 +31,5 @@ export const config: Config = {
   spaceSecretAccessKey: process.env.SPACE_SECRET_ACCESS_KEY || "",
   spaceEndpoint: process.env.SPACE_ENDPOINT || "",
   orderAppUrl: process.env.ORDER_APP_URL || "",
+  nextAuthSecret: process.env.NEXTAUTH_SECRET || "",
 };

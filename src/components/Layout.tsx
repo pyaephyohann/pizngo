@@ -10,12 +10,15 @@ const Layout = ({ children }: Props) => {
   const router = useRouter();
   const query = router.query;
   const isOrderApp = query.locationId && query.tableId;
+
   const isBackofficeApp =
     router.pathname.includes("/backoffice") ||
     router.pathname.includes("/auth");
+
   if (isOrderApp) {
     return <OrderAppLayout>{children}</OrderAppLayout>;
   }
+
   if (isBackofficeApp) {
     return <BackofficeLayout>{children}</BackofficeLayout>;
   }
