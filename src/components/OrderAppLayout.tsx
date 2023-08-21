@@ -20,7 +20,6 @@ const OrderAppLayout = ({ children }: Props) => {
 
   return (
     <Box>
-      <Box>This is order app layout</Box>
       <Box>{children}</Box>
     </Box>
   );
