@@ -52,6 +52,7 @@ const Order = () => {
       {/* Tab */}
       <Box>
         <Tabs
+          variant="fullWidth"
           value={value}
           onChange={(event, value) => {
             setValue(value);
