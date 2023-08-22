@@ -1,14 +1,15 @@
 import { useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { Locations } from "@prisma/client";
 import { useRouter } from "next/router";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const OrderAppHeader = () => {
   const router = useRouter();
   const locationId = router.query.locationId;
-  const { locations } = useAppSelector(appData);
+  const { locations, cart } = useAppSelector(appData);
 
   const location = locations.find(
     (item) => item.id === Number(locationId)
@@ -42,7 +43,7 @@ const OrderAppHeader = () => {
               fontSize: "1.3rem",
               color: "white",
               ml: "0.5rem",
-              fontFamily: "'Indie Flower', cursive",
+              fontFamily: "'Dosis', sans-serif",
             }}
           >
             {location.name}
@@ -51,10 +52,31 @@ const OrderAppHeader = () => {
       ) : (
         ""
       )}
-      <Box>
-        <Typography sx={{ fontSize: "1.3rem", color: "white" }}>
-          Cart Here
+      <Box
+        sx={{
+          position: "relative",
+          bgcolor: "#00DFA2",
+          borderRadius: "5rem",
+          p: "0.2rem",
+        }}
+      >
+        <Typography
+          sx={{
+            position: "absolute",
+            top: "-0.9rem",
+            right: "-0.5rem",
+            color: "white",
+            py: "0.1rem",
+            px: "0.5rem",
+            bgcolor: "#00DFA2",
+            borderRadius: "5rem",
+          }}
+        >
+          {cart.length}
         </Typography>
+        <IconButton>
+          <ShoppingCartIcon sx={{ color: "white", fontSize: "2.3rem" }} />
+        </IconButton>
       </Box>
     </Box>
   );

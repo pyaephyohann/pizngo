@@ -117,3 +117,7 @@ export const getAddonCategoriesByLocationId = (
 export const getQrCodeUrl = (locationId: number, tableId: number) => {
   return `https://msquarefdc.sgp1.cdn.digitaloceanspaces.com/msquarefdc/qrcode/batch1/pyaephyohan/locationId-${locationId}-tableId-${tableId}.png`;
 };
+
+export const generateRandomId = () => {
+  return (Math.random() + 1).toString(36).substring(7);
+};

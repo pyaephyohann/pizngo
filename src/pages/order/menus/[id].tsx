@@ -1,11 +1,8 @@
 import QuantitySelector from "@/components/QuantitySelector";
-import { useAppSelector } from "@/store/hooks";
-import {
-  appData,
-  selectAddons,
-  selectLocations,
-} from "@/store/slices/appSlice";
-import { getAddonCategoriesByMenuId } from "@/utils/client";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { appData } from "@/store/slices/appSlice";
+import { addToCart } from "@/store/slices/cartSlice";
+import { generateRandomId, getAddonCategoriesByMenuId } from "@/utils/client";
 import {
   Box,
   Button,
@@ -21,6 +18,7 @@ import {
 import { AddonCategories, Addons } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const Menu = () => {
   const router = useRouter();
@@ -28,6 +26,8 @@ const Menu = () => {
   const menuId = query.id as string;
   const { menus, addonCategories, addons, menusAddonCategories } =
     useAppSelector(appData);
+
+  const dispatch = useAppDispatch();
 
   const [quantity, setQuantity] = useState<number>(1);
 
@@ -114,6 +114,18 @@ const Menu = () => {
     }
   };
 
+  const handleAddToCart = () => {
+    if (!menu) return;
+    const cartItem = {
+      id: generateRandomId(),
+      menu,
+      quantity,
+      addons: selectedAddons,
+    };
+    dispatch(addToCart(cartItem));
+    router.push({ pathname: "/order", query });
+  };
+
   const renderAddons = (addonCategory: AddonCategories) => {
     const addonCategoryId = addonCategory.id;
     const currentAddons = validAddons.filter(
@@ -154,44 +166,76 @@ const Menu = () => {
 
   if (!menu) return <Box>Menu not found</Box>;
   return (
-    <Box sx={{ mt: "3rem", ml: "5rem" }}>
-      <Typography variant="h5">{menu.name}</Typography>
-      <Box sx={{ mt: "2rem" }}>
-        {validAddonCategories.map((item) => {
-          return (
-            <Box key={item.id} sx={{ my: "1.5rem" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "13rem",
-                  mb: "1rem",
-                }}
-              >
-                <Typography>{item.name}</Typography>
-                <Chip
-                  label={item.isRequired ? "Required" : "Optional"}
-                  sx={{ bgcolor: "#00DFA2", color: "white" }}
-                />
-              </Box>
-              {renderAddons(item)}
-            </Box>
-          );
-        })}
-      </Box>
-      <QuantitySelector
-        value={quantity}
-        onQuantityDecrease={onQuantityDecrease}
-        onQuantityIncrease={onQuantityIncrease}
-      />
-      <Button
-        disabled={isDisabled}
-        sx={{ mt: "2rem", mb: "5rem" }}
-        variant="contained"
+    <Box sx={{ mt: "3rem", display: "flex" }}>
+      {/* right side menu */}
+      <Box
+        sx={{
+          width: "50%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
       >
-        Add To Cart
-      </Button>
+        <Typography sx={{ fontSize: "1.5rem", mb: "2rem" }}>
+          {menu.name}
+        </Typography>
+        <Image
+          src={menu.assetUrl || ""}
+          alt="Menu"
+          width={300}
+          height={300}
+          style={{ borderRadius: "1rem" }}
+        />
+      </Box>
+      {/* left side addons and quantity */}
+      <Box
+        sx={{
+          width: "50%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Box>
+          {validAddonCategories.map((item) => {
+            return (
+              <Box key={item.id} sx={{ my: "2rem" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "20rem",
+                    mb: "1rem",
+                  }}
+                >
+                  <Typography sx={{ fontSize: "1.3rem" }}>
+                    {item.name}
+                  </Typography>
+                  <Chip
+                    label={item.isRequired ? "Required" : "Optional"}
+                    sx={{ bgcolor: "#00DFA2", color: "white" }}
+                  />
+                </Box>
+                {renderAddons(item)}
+              </Box>
+            );
+          })}
+        </Box>
+        <QuantitySelector
+          value={quantity}
+          onQuantityDecrease={onQuantityDecrease}
+          onQuantityIncrease={onQuantityIncrease}
+        />
+        <Button
+          onClick={handleAddToCart}
+          disabled={isDisabled}
+          sx={{ mt: "2.5rem", mb: "3rem" }}
+          variant="contained"
+        >
+          Add To Cart
+        </Button>
+      </Box>
     </Box>
   );
 };

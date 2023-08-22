@@ -95,6 +95,7 @@ export const selectMenusMenuCategoriesLocations = (state: RootState) =>
 export const selectTables = (state: RootState) => state.tables.items;
 export const selectOrders = (state: RootState) => state.orders.items;
 export const selectOrderlines = (state: RootState) => state.orderlines.items;
+export const selectCart = (state: RootState) => state.cart.items;
 
 export const appData = createSelector(
   [
@@ -110,6 +111,7 @@ export const appData = createSelector(
     selectTables,
     selectOrders,
     selectOrderlines,
+    selectCart,
   ],
   (
     user,
@@ -123,7 +125,8 @@ export const appData = createSelector(
     menusMenuCategoriesLocations,
     tables,
     orders,
-    orderlines
+    orderlines,
+    cart
   ) => {
     return {
       user,
@@ -138,6 +141,7 @@ export const appData = createSelector(
       tables,
       orders,
       orderlines,
+      cart,
     };
   }
 );
