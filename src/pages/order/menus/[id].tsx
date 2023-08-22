@@ -1,9 +1,14 @@
 import QuantitySelector from "@/components/QuantitySelector";
 import { useAppSelector } from "@/store/hooks";
-import { appData } from "@/store/slices/appSlice";
+import {
+  appData,
+  selectAddons,
+  selectLocations,
+} from "@/store/slices/appSlice";
 import { getAddonCategoriesByMenuId } from "@/utils/client";
 import {
   Box,
+  Button,
   Checkbox,
   Chip,
   FormControl,
@@ -15,7 +20,7 @@ import {
 } from "@mui/material";
 import { AddonCategories, Addons } from "@prisma/client";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Menu = () => {
   const router = useRouter();
@@ -25,6 +30,10 @@ const Menu = () => {
     useAppSelector(appData);
 
   const [quantity, setQuantity] = useState<number>(1);
+
+  const [selectedAddons, setSelectedAddons] = useState<Addons[]>([]);
+
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   const menu = menus.find((item) => item.id === Number(menuId));
 
@@ -50,6 +59,61 @@ const Menu = () => {
     setQuantity(newValue);
   };
 
+  useEffect(() => {
+    const requiredAddonCategories = validAddonCategories.filter(
+      (item) => item.isRequired
+    );
+    if (requiredAddonCategories.length) {
+      if (!selectedAddons.length) {
+        setIsDisabled(true);
+      } else {
+        const requiredAddons = selectedAddons.filter((addon) => {
+          const addonCategory = validAddonCategories.find(
+            (item) => item.id === addon.addonCategoryId
+          );
+          if (addonCategory?.isRequired) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+        const hasSelectAllRequiredAddons =
+          requiredAddonCategories.length === requiredAddons.length;
+        const isDisabled = hasSelectAllRequiredAddons ? false : true;
+        setIsDisabled(isDisabled);
+      }
+    }
+  }, [selectedAddons, validAddonCategories]);
+
+  const handleAddonSelect = (selected: boolean, addon: Addons) => {
+    const addonCategory = addonCategories.find(
+      (item) => item.id === addon.addonCategoryId
+    ) as AddonCategories;
+    if (addonCategory.isRequired) {
+      const addonWithSameAddonCategory = selectedAddons.find(
+        (item) => item.addonCategoryId === addon.addonCategoryId
+      ) as Addons;
+      let newSelectedAddon = [] as Addons[];
+      if (addonWithSameAddonCategory) {
+        const filteredAddons = selectedAddons.filter(
+          (item) => item.id !== addonWithSameAddonCategory.id
+        );
+        newSelectedAddon = [...filteredAddons, addon];
+      } else {
+        newSelectedAddon = [...selectedAddons, addon];
+      }
+      setSelectedAddons(newSelectedAddon);
+    } else {
+      if (selected) {
+        setSelectedAddons([...selectedAddons, addon]);
+      } else {
+        setSelectedAddons([
+          ...selectedAddons.filter((item) => item.id !== addon.id),
+        ]);
+      }
+    }
+  };
+
   const renderAddons = (addonCategory: AddonCategories) => {
     const addonCategoryId = addonCategory.id;
     const currentAddons = validAddons.filter(
@@ -64,7 +128,21 @@ const Menu = () => {
               <FormControlLabel
                 key={item.id}
                 value={item.name}
-                control={addonCategory.isRequired ? <Radio /> : <Checkbox />}
+                control={
+                  addonCategory.isRequired ? (
+                    <Radio
+                      onChange={(event, value) =>
+                        handleAddonSelect(value, item)
+                      }
+                    />
+                  ) : (
+                    <Checkbox
+                      onChange={(event, value) =>
+                        handleAddonSelect(value, item)
+                      }
+                    />
+                  )
+                }
                 label={item.name}
               />
             );
@@ -107,6 +185,13 @@ const Menu = () => {
         onQuantityDecrease={onQuantityDecrease}
         onQuantityIncrease={onQuantityIncrease}
       />
+      <Button
+        disabled={isDisabled}
+        sx={{ mt: "2rem", mb: "5rem" }}
+        variant="contained"
+      >
+        Add To Cart
+      </Button>
     </Box>
   );
 };
