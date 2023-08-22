@@ -1,3 +1,4 @@
+import QuantitySelector from "@/components/QuantitySelector";
 import { useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
 import { getAddonCategoriesByMenuId } from "@/utils/client";
@@ -12,8 +13,9 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import { AddonCategories } from "@prisma/client";
+import { AddonCategories, Addons } from "@prisma/client";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 const Menu = () => {
   const router = useRouter();
@@ -21,6 +23,8 @@ const Menu = () => {
   const menuId = query.id as string;
   const { menus, addonCategories, addons, menusAddonCategories } =
     useAppSelector(appData);
+
+  const [quantity, setQuantity] = useState<number>(1);
 
   const menu = menus.find((item) => item.id === Number(menuId));
 
@@ -36,10 +40,20 @@ const Menu = () => {
     validAddonCategoryIds.includes(item.addonCategoryId)
   );
 
+  const onQuantityDecrease = () => {
+    const newValue = quantity - 1 === 0 ? 1 : quantity - 1;
+    setQuantity(newValue);
+  };
+
+  const onQuantityIncrease = () => {
+    const newValue = quantity + 1;
+    setQuantity(newValue);
+  };
+
   const renderAddons = (addonCategory: AddonCategories) => {
     const addonCategoryId = addonCategory.id;
     const currentAddons = validAddons.filter(
-      (item) => item.addonCategoryId === addonCategoryId
+      (item: Addons) => item.addonCategoryId === addonCategoryId
     );
 
     return (
@@ -88,6 +102,11 @@ const Menu = () => {
           );
         })}
       </Box>
+      <QuantitySelector
+        value={quantity}
+        onQuantityDecrease={onQuantityDecrease}
+        onQuantityIncrease={onQuantityIncrease}
+      />
     </Box>
   );
 };
