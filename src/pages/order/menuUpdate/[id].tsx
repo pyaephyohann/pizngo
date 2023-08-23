@@ -1,8 +1,8 @@
 import QuantitySelector from "@/components/QuantitySelector";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
-import { addToCart } from "@/store/slices/cartSlice";
-import { generateRandomId, getAddonCategoriesByMenuId } from "@/utils/client";
+import { CartItem, updateCart } from "@/store/slices/cartSlice";
+import { getAddonCategoriesByMenuId } from "@/utils/client";
 import {
   Box,
   Button,
@@ -10,7 +10,6 @@ import {
   Chip,
   FormControl,
   FormControlLabel,
-  FormLabel,
   Radio,
   RadioGroup,
   Typography,
@@ -20,11 +19,12 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-const Menu = () => {
+const MenuUpdate = () => {
   const router = useRouter();
   const query = router.query;
-  const menuId = query.id as string;
-  const { menus, addonCategories, addons, menusAddonCategories } =
+  const cartItemId = query.id;
+
+  const { menus, addonCategories, addons, menusAddonCategories, cart } =
     useAppSelector(appData);
 
   const dispatch = useAppDispatch();
@@ -35,10 +35,10 @@ const Menu = () => {
 
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
-  const menu = menus.find((item) => item.id === Number(menuId));
+  const cartItem = cart.find((item) => item.id === cartItemId) as CartItem;
 
   const validAddonCategories = getAddonCategoriesByMenuId(
-    menuId,
+    String(cartItem?.menu.id),
     menusAddonCategories,
     addonCategories
   );
@@ -58,6 +58,20 @@ const Menu = () => {
     const newValue = quantity + 1;
     setQuantity(newValue);
   };
+
+  useEffect(() => {
+    if (cartItem) {
+      setSelectedAddons(cartItem.addons);
+      setQuantity(cartItem.quantity);
+    }
+  }, [cartItem]);
+
+  useEffect(() => {
+    if (cartItem) {
+      const isValid = query.locationId && query.tableId;
+      isValid && router.push({ pathname: "/order/viewCart", query });
+    }
+  }, [cartItem, query, router]);
 
   useEffect(() => {
     const requiredAddonCategories = validAddonCategories.filter(
@@ -114,16 +128,16 @@ const Menu = () => {
     }
   };
 
-  const handleAddToCart = () => {
-    if (!menu) return;
-    const cartItem = {
-      id: generateRandomId(),
-      menu,
-      quantity,
-      addons: selectedAddons,
-    };
-    dispatch(addToCart(cartItem));
-    router.push({ pathname: "/order", query });
+  const handleUpdateCart = () => {
+    dispatch(
+      updateCart({
+        id: cartItem.id,
+        menu: cartItem.menu,
+        addons: selectedAddons,
+        quantity,
+      })
+    );
+    router.push({ pathname: "/order/viewCart", query });
   };
 
   const renderAddons = (addonCategory: AddonCategories) => {
@@ -143,12 +157,22 @@ const Menu = () => {
                 control={
                   addonCategory.isRequired ? (
                     <Radio
+                      checked={
+                        selectedAddons.find((addon) => addon.id === item.id)
+                          ? true
+                          : false
+                      }
                       onChange={(event, value) =>
                         handleAddonSelect(value, item)
                       }
                     />
                   ) : (
                     <Checkbox
+                      checked={
+                        selectedAddons.find((addon) => addon.id === item.id)
+                          ? true
+                          : false
+                      }
                       onChange={(event, value) =>
                         handleAddonSelect(value, item)
                       }
@@ -164,7 +188,7 @@ const Menu = () => {
     );
   };
 
-  if (!menu) return <Box>Menu not found</Box>;
+  if (!cartItem) return null;
 
   return (
     <Box sx={{ mt: "3rem", display: "flex" }}>
@@ -178,10 +202,10 @@ const Menu = () => {
         }}
       >
         <Typography sx={{ fontSize: "1.5rem", mb: "2rem" }}>
-          {menu.name}
+          {cartItem.menu.name}
         </Typography>
         <Image
-          src={menu.assetUrl || ""}
+          src={cartItem.menu.assetUrl || ""}
           alt="Menu"
           width={300}
           height={300}
@@ -229,16 +253,16 @@ const Menu = () => {
           onQuantityIncrease={onQuantityIncrease}
         />
         <Button
-          onClick={handleAddToCart}
+          onClick={handleUpdateCart}
           disabled={isDisabled}
           sx={{ mt: "2.5rem", mb: "3rem" }}
           variant="contained"
         >
-          Add To Cart
+          Update
         </Button>
       </Box>
     </Box>
   );
 };
 
-export default Menu;
+export default MenuUpdate;

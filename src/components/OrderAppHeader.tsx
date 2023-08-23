@@ -5,9 +5,11 @@ import { Locations } from "@prisma/client";
 import { useRouter } from "next/router";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Link from "next/link";
 
 const OrderAppHeader = () => {
   const router = useRouter();
+  const query = router.query;
   const locationId = router.query.locationId;
   const { locations, cart } = useAppSelector(appData);
 
@@ -52,32 +54,34 @@ const OrderAppHeader = () => {
       ) : (
         ""
       )}
-      <Box
-        sx={{
-          position: "relative",
-          bgcolor: "#00DFA2",
-          borderRadius: "5rem",
-          p: "0.2rem",
-        }}
-      >
-        <Typography
+      <Link href={{ pathname: "/order/viewCart", query }}>
+        <Box
           sx={{
-            position: "absolute",
-            top: "-0.9rem",
-            right: "-0.5rem",
-            color: "white",
-            py: "0.1rem",
-            px: "0.5rem",
+            position: "relative",
             bgcolor: "#00DFA2",
             borderRadius: "5rem",
+            p: "0.2rem",
           }}
         >
-          {cart.length}
-        </Typography>
-        <IconButton>
-          <ShoppingCartIcon sx={{ color: "white", fontSize: "2.3rem" }} />
-        </IconButton>
-      </Box>
+          <Typography
+            sx={{
+              position: "absolute",
+              top: "-0.9rem",
+              right: "-0.5rem",
+              color: "white",
+              py: "0.1rem",
+              px: "0.5rem",
+              bgcolor: "#00DFA2",
+              borderRadius: "5rem",
+            }}
+          >
+            {cart.length}
+          </Typography>
+          <IconButton>
+            <ShoppingCartIcon sx={{ color: "white", fontSize: "2.3rem" }} />
+          </IconButton>
+        </Box>
+      </Link>
     </Box>
   );
 };
