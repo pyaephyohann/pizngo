@@ -11,6 +11,7 @@ const ActiveOrder = () => {
 
   const orderId = query.id;
   const { orders } = useAppSelector(appData);
+
   const dispatch = useAppDispatch();
 
   const order = orders.find((item) => item.id === Number(orderId));
@@ -23,15 +24,15 @@ const ActiveOrder = () => {
 
   useEffect(() => {
     dispatch(emptyCart());
-  }, []);
+  }, [dispatch]);
 
   if (!order) return null;
 
   return (
     <Box>
-      <Typography>Your Order Id = {order.id}</Typography>
-      <Typography>From table {order.tableId}</Typography>
-      <Typography>From Location {order.locationId}</Typography>
+      <Typography sx={{ mt: "3rem", fontSize: "3rem", textAlign: "center" }}>
+        Thank you for your order. Please use animation
+      </Typography>
     </Box>
   );
 };
