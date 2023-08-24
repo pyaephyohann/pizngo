@@ -1,11 +1,13 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CartItem, removeFromCart } from "@/store/slices/cartSlice";
+import { config } from "@/config";
+import { addOrder } from "@/store/slices/ordersSlice";
 
 const ViewCart = () => {
   const router = useRouter();
@@ -16,6 +18,26 @@ const ViewCart = () => {
 
   const handleRemoveFromCart = (cartItem: CartItem) => {
     dispatch(removeFromCart(cartItem));
+  };
+
+  const { locationId, tableId } = query;
+
+  const isDisabeld = !locationId || !tableId;
+
+  const handleConfirmOrder = async () => {
+    const response = await fetch(
+      `${config.apiBaseUrl}/app?locationId=${locationId}&tableId=${tableId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cart }),
+      }
+    );
+    const createdOrder = await response.json();
+    dispatch(addOrder(createdOrder));
+    router.push({ pathname: `/order/activeOrder/${createdOrder.id}`, query });
   };
 
   useEffect(() => {
@@ -78,6 +100,15 @@ const ViewCart = () => {
             </Box>
           );
         })}
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: "3rem" }}>
+        <Button
+          disabled={isDisabeld}
+          onClick={handleConfirmOrder}
+          variant="contained"
+        >
+          Confirm Order
+        </Button>
       </Box>
     </Box>
   );

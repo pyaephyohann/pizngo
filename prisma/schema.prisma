@@ -133,7 +133,7 @@ model Orders {
   tableId    Int
   table      Tables       @relation(fields: [tableId], references: [id])
   idPaid     Boolean      @default(false)
-  price      Int          @default(0)
+  price      Int        @default(0)
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @default(now()) @updatedAt
   Orderlines Orderlines[]
@@ -145,8 +145,8 @@ model Orderlines {
   menu      Menus    @relation(fields: [menuId], references: [id])
   orderId   Int
   order     Orders   @relation(fields: [orderId], references: [id])
-  addonId   Int
-  addon     Addons   @relation(fields: [addonId], references: [id])
+  addonId   Int?
+  addon     Addons?   @relation(fields: [addonId], references: [id])
   status OrderStatus @default(PENDING)
   quantity  Int      @default(1)
   createdAt DateTime @default(now())

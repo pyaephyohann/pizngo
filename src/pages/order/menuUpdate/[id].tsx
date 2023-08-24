@@ -67,7 +67,7 @@ const MenuUpdate = () => {
   }, [cartItem]);
 
   useEffect(() => {
-    if (cartItem) {
+    if (!cartItem) {
       const isValid = query.locationId && query.tableId;
       isValid && router.push({ pathname: "/order/viewCart", query });
     }
