@@ -27,7 +27,7 @@ const TopBar = () => {
   };
   return (
     <Box>
-      <AppBar position="static">
+      <AppBar sx={{ bgcolor: "secondary.main" }} position="static">
         <Toolbar>
           {data ? (
             <Box
@@ -36,6 +36,7 @@ const TopBar = () => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 width: "100%",
+                p: "0.5rem",
               }}
             >
               <Box>

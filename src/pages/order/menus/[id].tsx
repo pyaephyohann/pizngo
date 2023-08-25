@@ -168,7 +168,7 @@ const Menu = () => {
 
   return (
     <Box sx={{ mt: "3rem", display: "flex" }}>
-      {/* right side menu */}
+      {/* left side menu */}
       <Box
         sx={{
           width: "50%",
@@ -188,7 +188,7 @@ const Menu = () => {
           style={{ borderRadius: "1rem" }}
         />
       </Box>
-      {/* left side addons and quantity */}
+      {/* right side addons and quantity */}
       <Box
         sx={{
           width: "50%",
@@ -215,7 +215,7 @@ const Menu = () => {
                   </Typography>
                   <Chip
                     label={item.isRequired ? "Required" : "Optional"}
-                    sx={{ bgcolor: "#00DFA2", color: "white" }}
+                    sx={{ bgcolor: "primary.main", color: "white" }}
                   />
                 </Box>
                 {renderAddons(item)}

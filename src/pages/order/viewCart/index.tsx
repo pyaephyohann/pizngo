@@ -62,7 +62,7 @@ const ViewCart = () => {
                 </Typography>
                 <Typography
                   sx={{
-                    bgcolor: "#00DFA2",
+                    bgcolor: "primary.main",
                     borderRadius: "5rem",
                     px: "0.5rem",
                     py: "0.1rem",
@@ -91,10 +91,10 @@ const ViewCart = () => {
                     });
                   }}
                 >
-                  <ModeEditIcon sx={{ color: "#00DFA2" }} />
+                  <ModeEditIcon sx={{ color: "primary.main" }} />
                 </IconButton>
                 <IconButton onClick={() => handleRemoveFromCart(cartItem)}>
-                  <DeleteIcon sx={{ color: "#00DFA2" }} />
+                  <DeleteIcon sx={{ color: "primary.main" }} />
                 </IconButton>
               </Box>
             </Box>

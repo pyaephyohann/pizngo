@@ -34,7 +34,11 @@ const Tables = () => {
           return (
             <ItemCard
               key={item.id}
-              icon={<TableBarIcon sx={{ fontSize: "2.5rem" }} />}
+              icon={
+                <TableBarIcon
+                  sx={{ fontSize: "2.5rem", color: "secondary.main" }}
+                />
+              }
               title={item.name}
               href={`/backoffice/tables/${item.id}`}
             />

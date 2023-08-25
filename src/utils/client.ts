@@ -6,6 +6,7 @@ import {
   Menus,
   MenusAddonCategories,
   MenusMenuCategoriesLocations,
+  Orderlines,
 } from "@prisma/client";
 
 export const getSelectedLocationId = () => {
@@ -120,4 +121,17 @@ export const getQrCodeUrl = (locationId: number, tableId: number) => {
 
 export const generateRandomId = () => {
   return (Math.random() + 1).toString(36).substring(7);
+};
+
+export const getNumberOfMenusByOrderId = (
+  orderId: number,
+  orderlines: Orderlines[]
+) => {
+  const validOrderlines = orderlines.filter((item) => item.orderId === orderId);
+  const menuIds = [] as number[];
+  validOrderlines.forEach((item) => {
+    const hasAdded = menuIds.find((menuId) => item.menuId === menuId);
+    if (!hasAdded) menuIds.push(item.menuId);
+  });
+  return menuIds.length;
 };

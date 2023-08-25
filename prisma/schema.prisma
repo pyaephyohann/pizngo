@@ -132,7 +132,7 @@ model Orders {
   location   Locations    @relation(fields: [locationId], references: [id])
   tableId    Int
   table      Tables       @relation(fields: [tableId], references: [id])
-  idPaid     Boolean      @default(false)
+  isPaid     Boolean      @default(false)
   price      Int        @default(0)
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @default(now()) @updatedAt

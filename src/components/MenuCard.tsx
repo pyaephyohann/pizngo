@@ -34,7 +34,7 @@ const MenuCard = ({ menu, href }: Props) => {
               position: "absolute",
               top: "0.5rem",
               right: "0.5rem",
-              bgcolor: "lightgreen",
+              bgcolor: "primary.main",
               borderRadius: "5rem",
               p: "0.6rem",
               color: "white",

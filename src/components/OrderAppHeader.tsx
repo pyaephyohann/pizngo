@@ -22,7 +22,7 @@ const OrderAppHeader = () => {
       sx={{
         p: "1rem",
         px: "3rem",
-        bgcolor: "#8062D6",
+        bgcolor: "secondary.main",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
@@ -39,7 +39,7 @@ const OrderAppHeader = () => {
       </Typography>
       {location ? (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <LocationOnIcon sx={{ fontSize: "1.8rem", color: "#00DFA2" }} />
+          <LocationOnIcon sx={{ fontSize: "1.8rem", color: "primary.main" }} />
           <Typography
             sx={{
               fontSize: "1.3rem",
@@ -58,7 +58,7 @@ const OrderAppHeader = () => {
         <Box
           sx={{
             position: "relative",
-            bgcolor: "#00DFA2",
+            bgcolor: "primary.main",
             borderRadius: "5rem",
             p: "0.2rem",
           }}
@@ -71,7 +71,7 @@ const OrderAppHeader = () => {
               color: "white",
               py: "0.1rem",
               px: "0.5rem",
-              bgcolor: "#00DFA2",
+              bgcolor: "primary.main",
               borderRadius: "5rem",
             }}
           >
