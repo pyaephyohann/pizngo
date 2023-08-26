@@ -133,30 +133,39 @@ const Menu = () => {
     );
 
     return (
-      <FormControl>
+      <FormControl sx={{ width: "70%" }}>
         <RadioGroup>
           {currentAddons.map((item) => {
             return (
-              <FormControlLabel
+              <Box
                 key={item.id}
-                value={item.name}
-                control={
-                  addonCategory.isRequired ? (
-                    <Radio
-                      onChange={(event, value) =>
-                        handleAddonSelect(value, item)
-                      }
-                    />
-                  ) : (
-                    <Checkbox
-                      onChange={(event, value) =>
-                        handleAddonSelect(value, item)
-                      }
-                    />
-                  )
-                }
-                label={item.name}
-              />
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <FormControlLabel
+                  value={item.name}
+                  control={
+                    addonCategory.isRequired ? (
+                      <Radio
+                        onChange={(event, value) =>
+                          handleAddonSelect(value, item)
+                        }
+                      />
+                    ) : (
+                      <Checkbox
+                        onChange={(event, value) =>
+                          handleAddonSelect(value, item)
+                        }
+                      />
+                    )
+                  }
+                  label={item.name}
+                />
+                <Typography>{item.price} Ks</Typography>
+              </Box>
             );
           })}
         </RadioGroup>
@@ -177,9 +186,28 @@ const Menu = () => {
           alignItems: "center",
         }}
       >
-        <Typography sx={{ fontSize: "1.5rem", mb: "2rem" }}>
-          {menu.name}
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: "3rem",
+            width: "40%",
+          }}
+        >
+          <Typography sx={{ fontSize: "1.5rem" }}>{menu.name}</Typography>
+          <Typography
+            sx={{
+              fontSize: "1.3rem",
+              bgcolor: "primary.main",
+              borderRadius: "2rem",
+              p: "0.5rem",
+              color: "white",
+            }}
+          >
+            {menu.price} Ks
+          </Typography>
+        </Box>
         <Image
           src={menu.assetUrl || ""}
           alt="Menu"
@@ -218,6 +246,7 @@ const Menu = () => {
                     sx={{ bgcolor: "primary.main", color: "white" }}
                   />
                 </Box>
+
                 {renderAddons(item)}
               </Box>
             );

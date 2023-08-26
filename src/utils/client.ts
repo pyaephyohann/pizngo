@@ -1,3 +1,4 @@
+import { CartItem } from "@/store/slices/cartSlice";
 import {
   AddonCategories,
   Addons,
@@ -134,4 +135,15 @@ export const getNumberOfMenusByOrderId = (
     if (!hasAdded) menuIds.push(item.menuId);
   });
   return menuIds.length;
+};
+
+export const getCartTotalPrice = (cart: CartItem[]) => {
+  const totalPrice = cart.reduce((prev, curr) => {
+    const menuPrice = curr.menu.price;
+    const totalAddonPrice = curr.addons.reduce((addonPrice, addon) => {
+      return (addonPrice += addon.price);
+    }, 0);
+    return (prev += (menuPrice + totalAddonPrice) * curr.quantity);
+  }, 0);
+  return totalPrice;
 };

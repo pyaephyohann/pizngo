@@ -1,4 +1,5 @@
 import { CartItem } from "@/store/slices/cartSlice";
+import { getCartTotalPrice } from "@/utils/client";
 import { prisma } from "@/utils/server";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
@@ -112,6 +113,7 @@ export default async function handler(
       const orderData = {
         locationId,
         tableId,
+        price: getCartTotalPrice(cart),
       };
       const newOrder = await prisma.orders.create({
         data: orderData,

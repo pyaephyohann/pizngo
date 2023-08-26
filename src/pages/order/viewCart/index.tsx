@@ -8,6 +8,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { CartItem, removeFromCart } from "@/store/slices/cartSlice";
 import { config } from "@/config";
 import { addOrder } from "@/store/slices/ordersSlice";
+import { getCartTotalPrice } from "@/utils/client";
+import Image from "next/image";
 
 const ViewCart = () => {
   const router = useRouter();
@@ -52,38 +54,30 @@ const ViewCart = () => {
       <Typography sx={{ fontSize: "2rem", textAlign: "center" }}>
         Review Your Cart
       </Typography>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: "4rem" }}>
+      <Box
+        sx={{ display: "flex", flexWrap: "wrap", color: "white", mt: "0.5rem" }}
+      >
         {cart.map((cartItem) => {
           return (
-            <Box key={cartItem.id} sx={{ mx: "4rem" }}>
-              <Box sx={{ display: "flex", mb: "1.5rem", alignItems: "center" }}>
-                <Typography variant="h5" sx={{ mr: "1rem" }}>
-                  {cartItem.menu.name}
-                </Typography>
-                <Typography
-                  sx={{
-                    bgcolor: "primary.main",
-                    borderRadius: "5rem",
-                    px: "0.5rem",
-                    py: "0.1rem",
-                    color: "white",
-                  }}
-                >
-                  {cartItem.quantity}
-                </Typography>
-              </Box>
-              <Box>
-                {cartItem.addons.map((addon) => {
-                  return (
-                    <Typography sx={{ my: "0.5rem" }} key={addon.id}>
-                      {addon.name}
-                    </Typography>
-                  );
-                })}
-              </Box>
-              <Box sx={{ mt: "1rem" }}>
+            <Box
+              key={cartItem.id}
+              sx={{
+                width: "15rem",
+                bgcolor: "primary.main",
+                borderRadius: "1rem",
+                p: "1.5rem",
+                m: "1.5rem",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  mb: "1.3rem",
+                }}
+              >
                 <IconButton
-                  sx={{ mr: "0.5rem" }}
+                  sx={{ mr: "2rem", bgcolor: "secondary.main" }}
                   onClick={() => {
                     router.push({
                       pathname: `/order/menuUpdate/${cartItem.id}`,
@@ -91,17 +85,67 @@ const ViewCart = () => {
                     });
                   }}
                 >
-                  <ModeEditIcon sx={{ color: "primary.main" }} />
+                  <ModeEditIcon sx={{ color: "white" }} />
                 </IconButton>
-                <IconButton onClick={() => handleRemoveFromCart(cartItem)}>
-                  <DeleteIcon sx={{ color: "primary.main" }} />
+                <IconButton
+                  sx={{ bgcolor: "secondary.main" }}
+                  onClick={() => handleRemoveFromCart(cartItem)}
+                >
+                  <DeleteIcon sx={{ color: "white" }} />
                 </IconButton>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mt: "1rem",
+                }}
+              >
+                <Typography>{cartItem.menu.name}</Typography>
+                <Typography>{cartItem.menu.price} Ks</Typography>
+              </Box>
+              <Box sx={{ display: "flex", mt: "1rem" }}>
+                <Typography sx={{ mr: "2rem" }}>Quantity</Typography>
+                <Typography>{cartItem.quantity}</Typography>
+              </Box>
+              <Box
+                sx={{ display: "flex", justifyContent: "center", mt: "1.3rem" }}
+              >
+                <Image
+                  src={cartItem.menu.assetUrl as string}
+                  alt="Menu"
+                  width={200}
+                  height={200}
+                  style={{ borderRadius: "2rem" }}
+                />
+              </Box>
+              <Box sx={{ mt: "2rem" }}>
+                {cartItem.addons.map((addon) => {
+                  return (
+                    <Box
+                      key={addon.id}
+                      sx={{
+                        display: "flex",
+                        my: "0.5rem",
+                      }}
+                    >
+                      <Typography sx={{ mr: "2rem" }}>{addon.name}</Typography>
+                      <Typography>{addon.price} Ks</Typography>
+                    </Box>
+                  );
+                })}
               </Box>
             </Box>
           );
         })}
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: "3rem" }}>
+      <Box>
+        <Typography variant="h5" sx={{ textAlign: "center", mt: "2rem" }}>
+          Total Price : {getCartTotalPrice(cart)} Ks
+        </Typography>
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "center", my: "3rem" }}>
         <Button
           disabled={isDisabeld}
           onClick={handleConfirmOrder}

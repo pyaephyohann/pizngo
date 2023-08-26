@@ -28,15 +28,20 @@ const OrderAppHeader = () => {
         alignItems: "center",
       }}
     >
-      <Typography
-        sx={{
-          fontFamily: "'Dancing Script', cursive",
-          fontSize: "2.5rem",
-          color: "white",
-        }}
+      <Link
+        style={{ textDecoration: "none" }}
+        href={{ pathname: "/order", query }}
       >
-        Pizngo
-      </Typography>
+        <Typography
+          sx={{
+            fontFamily: "'Dancing Script', cursive",
+            fontSize: "2.5rem",
+            color: "white",
+          }}
+        >
+          Pizngo
+        </Typography>
+      </Link>
       {location ? (
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <LocationOnIcon sx={{ fontSize: "1.8rem", color: "primary.main" }} />
