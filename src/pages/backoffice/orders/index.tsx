@@ -22,7 +22,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { AddonCategories, Addons, Orders } from "@prisma/client";
+import { AddonCategories, Addons, OrderStatus, Orders } from "@prisma/client";
 import { useState } from "react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -42,7 +42,7 @@ const Orders = () => {
   const Row = ({ order }: Props) => {
     const [open, setOpen] = useState(false);
 
-    const RenderOrderlines = ({ order }: Props) => {
+    const RenderOrderlines = () => {
       const validOrderlines = getOrderlinesByOrderId(
         order.id,
         orderlines,
@@ -115,6 +115,24 @@ const Orders = () => {
                     );
                   })}
                 </Box>
+                {/* show status */}
+                <Box sx={{ mt: "1rem" }}>
+                  <FormControl sx={{ width: "80%" }}>
+                    <InputLabel>Status</InputLabel>
+                    <Select
+                      defaultValue={item.status}
+                      label="Status"
+                      onChange={() => {}}
+                    >
+                      <MenuItem value={OrderStatus.PENDING}>Pending</MenuItem>
+                      <MenuItem value={OrderStatus.PREPARING}>
+                        Preparing
+                      </MenuItem>
+                      <MenuItem value={OrderStatus.COMPLETE}>Complete</MenuItem>
+                      <MenuItem value={OrderStatus.REJECTED}>Rejected</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
               </Box>
             );
           })}
@@ -143,7 +161,7 @@ const Orders = () => {
         <TableRow>
           <TableCell style={{ paddingBottom: "0", paddingTop: "0" }}>
             <Collapse in={open} timeout="auto" unmountOnExit>
-              {<RenderOrderlines order={order} />}
+              {<RenderOrderlines />}
             </Collapse>
           </TableCell>
         </TableRow>
