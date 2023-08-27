@@ -147,3 +147,49 @@ export const getCartTotalPrice = (cart: CartItem[]) => {
   }, 0);
   return totalPrice;
 };
+
+export const getOrderlinesByOrderId = (
+  orderId: number,
+  orderlines: Orderlines[],
+  menus: Menus[],
+  addons: Addons[],
+  addonCategories: AddonCategories[]
+) => {
+  const validOrderlines = orderlines.filter((item) => item.orderId === orderId);
+  const menuIds = [] as number[];
+  validOrderlines.forEach((item) => {
+    const hasAdded = menuIds.includes(item.menuId);
+    if (!hasAdded) menuIds.push(item.menuId);
+  });
+  const orderlineDatas = menuIds.map((menuId) => {
+    const addonIds = validOrderlines
+      .filter((item) => item.menuId === menuId)
+      .map((item) => item.addonId);
+    const orderlineAddons = addons.filter((addon) =>
+      addonIds.includes(addon.id)
+    );
+    const menu = menus.find((item) => item.id === menuId) as Menus;
+    const status = validOrderlines.find(
+      (item) => item.menuId === menuId
+    )?.status;
+    const quantity = validOrderlines.find(
+      (item) => item.menuId === menuId
+    )?.quantity;
+    const addonWithCategories: { [key: number]: Addons[] } = {};
+    orderlineAddons.map((addon) => {
+      const addonCategory = addonCategories.find(
+        (item) => item.id === addon.addonCategoryId
+      ) as AddonCategories;
+      if (!addonWithCategories[addonCategory.id]) {
+        addonWithCategories[addonCategory.id] = [addon];
+      } else {
+        addonWithCategories[addonCategory.id] = [
+          ...addonWithCategories[addonCategory.id],
+          addon,
+        ];
+      }
+    });
+    return { menu, addonWithCategories, status, quantity };
+  });
+  return orderlineDatas;
+};
