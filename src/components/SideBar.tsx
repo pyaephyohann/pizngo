@@ -74,7 +74,7 @@ const SideBar = () => {
         minWidth: 250,
         borderTopRightRadius: "2rem",
         minHeight: "100vh",
-        bgcolor: "#1976D2",
+        bgcolor: "secondary.main",
       }}
     >
       <List>

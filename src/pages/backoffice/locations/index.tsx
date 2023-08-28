@@ -26,7 +26,11 @@ const Locations = () => {
           return (
             <ItemCard
               key={item.id}
-              icon={<LocationOnIcon sx={{ fontSize: "2.5rem" }} />}
+              icon={
+                <LocationOnIcon
+                  sx={{ fontSize: "2.5rem", color: "secondary.main" }}
+                />
+              }
               title={item.name}
               href={`/backoffice/locations/${item.id}`}
             />

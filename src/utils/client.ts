@@ -1,3 +1,4 @@
+import { CartItem } from "@/store/slices/cartSlice";
 import {
   AddonCategories,
   Addons,
@@ -6,6 +7,7 @@ import {
   Menus,
   MenusAddonCategories,
   MenusMenuCategoriesLocations,
+  Orderlines,
 } from "@prisma/client";
 
 export const getSelectedLocationId = () => {
@@ -116,4 +118,78 @@ export const getAddonCategoriesByLocationId = (
 
 export const getQrCodeUrl = (locationId: number, tableId: number) => {
   return `https://msquarefdc.sgp1.cdn.digitaloceanspaces.com/msquarefdc/qrcode/batch1/pyaephyohan/locationId-${locationId}-tableId-${tableId}.png`;
+};
+
+export const generateRandomId = () => {
+  return (Math.random() + 1).toString(36).substring(7);
+};
+
+export const getNumberOfMenusByOrderId = (
+  orderId: number,
+  orderlines: Orderlines[]
+) => {
+  const validOrderlines = orderlines.filter((item) => item.orderId === orderId);
+  const menuIds = [] as number[];
+  validOrderlines.forEach((item) => {
+    const hasAdded = menuIds.find((menuId) => item.menuId === menuId);
+    if (!hasAdded) menuIds.push(item.menuId);
+  });
+  return menuIds.length;
+};
+
+export const getCartTotalPrice = (cart: CartItem[]) => {
+  const totalPrice = cart.reduce((prev, curr) => {
+    const menuPrice = curr.menu.price;
+    const totalAddonPrice = curr.addons.reduce((addonPrice, addon) => {
+      return (addonPrice += addon.price);
+    }, 0);
+    return (prev += (menuPrice + totalAddonPrice) * curr.quantity);
+  }, 0);
+  return totalPrice;
+};
+
+export const getOrderlinesByOrderId = (
+  orderId: number,
+  orderlines: Orderlines[],
+  menus: Menus[],
+  addons: Addons[],
+  addonCategories: AddonCategories[]
+) => {
+  const validOrderlines = orderlines.filter((item) => item.orderId === orderId);
+  const menuIds = [] as number[];
+  validOrderlines.forEach((item) => {
+    const hasAdded = menuIds.includes(item.menuId);
+    if (!hasAdded) menuIds.push(item.menuId);
+  });
+  const orderlineDatas = menuIds.map((menuId) => {
+    const addonIds = validOrderlines
+      .filter((item) => item.menuId === menuId)
+      .map((item) => item.addonId);
+    const orderlineAddons = addons.filter((addon) =>
+      addonIds.includes(addon.id)
+    );
+    const menu = menus.find((item) => item.id === menuId) as Menus;
+    const status = validOrderlines.find(
+      (item) => item.menuId === menuId
+    )?.status;
+    const quantity = validOrderlines.find(
+      (item) => item.menuId === menuId
+    )?.quantity;
+    const addonWithCategories: { [key: number]: Addons[] } = {};
+    orderlineAddons.map((addon) => {
+      const addonCategory = addonCategories.find(
+        (item) => item.id === addon.addonCategoryId
+      ) as AddonCategories;
+      if (!addonWithCategories[addonCategory.id]) {
+        addonWithCategories[addonCategory.id] = [addon];
+      } else {
+        addonWithCategories[addonCategory.id] = [
+          ...addonWithCategories[addonCategory.id],
+          addon,
+        ];
+      }
+    });
+    return { menu, addonWithCategories, status, quantity };
+  });
+  return orderlineDatas;
 };

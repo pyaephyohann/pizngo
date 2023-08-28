@@ -39,7 +39,9 @@ const Addons = () => {
           return (
             <ItemCard
               key={item.id}
-              icon={<EggIcon sx={{ fontSize: "2.5rem" }} />}
+              icon={
+                <EggIcon sx={{ fontSize: "2.5rem", color: "secondary.main" }} />
+              }
               href={`/backoffice/addons/${item.id}`}
               title={item.name}
               subTitle={`${item.price} Kyats`}

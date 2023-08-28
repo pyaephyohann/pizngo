@@ -3,6 +3,7 @@ import { fetchAppData } from "@/store/slices/appSlice";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import OrderAppHeader from "./OrderAppHeader";
 
 interface Props {
   children: string | JSX.Element | JSX.Element[];
@@ -20,7 +21,7 @@ const OrderAppLayout = ({ children }: Props) => {
 
   return (
     <Box>
-      <Box>This is order app layout</Box>
+      <OrderAppHeader />
       <Box>{children}</Box>
     </Box>
   );

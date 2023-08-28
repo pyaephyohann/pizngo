@@ -1,3 +1,5 @@
+import { CartItem } from "@/store/slices/cartSlice";
+import { getCartTotalPrice } from "@/utils/client";
 import { prisma } from "@/utils/server";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
@@ -101,6 +103,44 @@ export default async function handler(
         orders,
         orderlines,
       });
+    } else if (method === "POST") {
+      const locationId = Number(req.query.locationId);
+      const tableId = Number(req.query.tableId);
+      const cart = req.body.cart;
+
+      const isValid = locationId && tableId && cart.length;
+      if (!isValid) return res.status(400).send("Bad Request");
+      const orderData = {
+        locationId,
+        tableId,
+        price: getCartTotalPrice(cart),
+      };
+      const newOrder = await prisma.orders.create({
+        data: orderData,
+      });
+      cart.forEach(async (cartItem: CartItem) => {
+        const menu = cartItem.menu;
+        const hasAddons = cartItem.addons.length;
+        if (hasAddons) {
+          const addons = cartItem.addons;
+          const orderLineDatas = addons.map((addon) => ({
+            menuId: menu.id,
+            orderId: newOrder.id,
+            addonId: addon.id,
+            quantity: cartItem.quantity,
+          }));
+          await prisma.orderlines.createMany({ data: orderLineDatas });
+        } else {
+          await prisma.orderlines.create({
+            data: {
+              menuId: menu.id,
+              orderId: newOrder.id,
+              quantity: cartItem.quantity,
+            },
+          });
+        }
+      });
+      res.status(200).send(newOrder);
     }
   } else {
     const session = await getSession({ req });

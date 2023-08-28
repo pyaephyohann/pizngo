@@ -27,7 +27,7 @@ const TopBar = () => {
   };
   return (
     <Box>
-      <AppBar position="static">
+      <AppBar sx={{ bgcolor: "secondary.main" }} position="static">
         <Toolbar>
           {data ? (
             <Box
@@ -36,18 +36,18 @@ const TopBar = () => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 width: "100%",
+                p: "0.5rem",
               }}
             >
-              <Box
-                sx={{ width: "9rem", display: "flex", alignItems: "center" }}
-              >
-                <Image
-                  src="https://i.pinimg.com/236x/b5/95/40/b59540657dd8406dbece7f62fdc1a039.jpg"
-                  alt="logo"
-                  width={60}
-                  style={{ borderRadius: "5rem", padding: "0.5rem" }}
-                  height={60}
-                />
+              <Box>
+                <Typography
+                  sx={{
+                    fontFamily: "'Dancing Script', cursive",
+                    fontSize: "2.5rem",
+                  }}
+                >
+                  Pizngo
+                </Typography>
               </Box>
 
               <Typography variant="h6">{getTitle()}</Typography>

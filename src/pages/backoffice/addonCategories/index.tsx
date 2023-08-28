@@ -62,7 +62,11 @@ const AddonCategories = () => {
           return (
             <ItemCard
               key={item.id}
-              icon={<ClassIcon sx={{ fontSize: "2.5rem" }} />}
+              icon={
+                <ClassIcon
+                  sx={{ fontSize: "2.5rem", color: "secondary.main" }}
+                />
+              }
               title={item.name}
               href={`/backoffice/addonCategories/${item.id}`}
               subTitle={`${getAddonsCount(item.id)} addons`}

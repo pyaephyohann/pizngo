@@ -53,7 +53,11 @@ const MenuCategories = () => {
             <ItemCard
               key={item.id}
               href={`/backoffice/menuCategories/${item.id}`}
-              icon={<CategoryIcon sx={{ fontSize: "2.5rem" }} />}
+              icon={
+                <CategoryIcon
+                  sx={{ fontSize: "2.5rem", color: "secondary.main" }}
+                />
+              }
               title={item.name}
               subTitle={`${getMenusCount(item.id)} Menus`}
             />
