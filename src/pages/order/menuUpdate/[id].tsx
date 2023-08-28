@@ -24,7 +24,7 @@ const MenuUpdate = () => {
   const query = router.query;
   const cartItemId = query.id;
 
-  const { menus, addonCategories, addons, menusAddonCategories, cart } =
+  const { addonCategories, addons, menusAddonCategories, cart } =
     useAppSelector(appData);
 
   const dispatch = useAppDispatch();

@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
 import {
   getNumberOfMenusByOrderId,
@@ -14,6 +14,7 @@ import {
   MenuItem,
   Paper,
   Select,
+  SelectChangeEvent,
   Table,
   TableBody,
   TableCell,
@@ -22,15 +23,20 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { AddonCategories, Addons, OrderStatus, Orders } from "@prisma/client";
+import { AddonCategories, OrderStatus, Orders } from "@prisma/client";
 import { useState } from "react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { updateOrderlineStatus } from "@/store/slices/orderlinesSlice";
 
 const Orders = () => {
   const { orders, orderlines, addons, addonCategories, menus } =
     useAppSelector(appData);
+
+  const dispatch = useAppDispatch();
+
   const selectedLocationId = getSelectedLocationId();
+
   const currentLocationOrders = orders.filter(
     (item) => item.locationId === Number(selectedLocationId)
   );
@@ -50,6 +56,21 @@ const Orders = () => {
         addons,
         addonCategories
       );
+
+      const handleUpdateOrderlineStatus = (
+        event: SelectChangeEvent<
+          "PENDING" | "PREPARING" | "COMPLETE" | "REJECTED"
+        >,
+        menuId: number
+      ) => {
+        dispatch(
+          updateOrderlineStatus({
+            menuId,
+            orderId: order.id,
+            status: event.target.value as OrderStatus,
+          })
+        );
+      };
 
       return (
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
@@ -122,7 +143,9 @@ const Orders = () => {
                     <Select
                       defaultValue={item.status}
                       label="Status"
-                      onChange={() => {}}
+                      onChange={(event) =>
+                        handleUpdateOrderlineStatus(event, item.menu.id)
+                      }
                     >
                       <MenuItem value={OrderStatus.PENDING}>Pending</MenuItem>
                       <MenuItem value={OrderStatus.PREPARING}>
