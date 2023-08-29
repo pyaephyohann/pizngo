@@ -150,6 +150,7 @@ export default async function handler(
       });
       return res.status(200).send(newOrder);
     }
+    return res.status(405).send("Method not allowed");
   } else {
     const session = await getSession({ req });
     if (!session) return res.status(401).send("Unathorized");
