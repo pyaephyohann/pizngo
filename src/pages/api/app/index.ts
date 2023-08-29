@@ -1,6 +1,12 @@
 import { CartItem } from "@/store/slices/cartSlice";
 import { getCartTotalPrice } from "@/utils/client";
 import { prisma } from "@/utils/server";
+import {
+  Locations,
+  MenusAddonCategories,
+  MenusMenuCategoriesLocations,
+  Orders,
+} from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
@@ -28,8 +34,8 @@ export default async function handler(
           },
         });
       const menuIds = menusMenuCategoriesLocations
-        .map((item) => item.menuId)
-        .filter((item) => item !== null) as number[];
+        .map((item: MenusMenuCategoriesLocations) => item.menuId)
+        .filter((item: number) => item !== null) as number[];
       const menus = await prisma.menus.findMany({
         where: {
           id: {
@@ -39,7 +45,7 @@ export default async function handler(
         },
       });
       const menuCategoryIds = menusMenuCategoriesLocations.map(
-        (item) => item.menuCategoryId
+        (item: MenusMenuCategoriesLocations) => item.menuCategoryId
       );
       const menuCategories = await prisma.menuCategories.findMany({
         where: {
@@ -58,7 +64,7 @@ export default async function handler(
         },
       });
       const addonCategoryIds = menusAddonCategories.map(
-        (item) => item.addonCategoryId
+        (item: MenusAddonCategories) => item.addonCategoryId
       );
       const addonCategories = await prisma.addonCategories.findMany({
         where: {
@@ -81,7 +87,7 @@ export default async function handler(
           locationId,
         },
       });
-      const orderIds = orders.map((item) => item.id);
+      const orderIds = orders.map((item: Orders) => item.id);
       const orderlines = await prisma.orderlines.findMany({
         where: {
           orderId: {
@@ -142,7 +148,7 @@ export default async function handler(
           });
         }
       });
-      res.status(200).send(newOrder);
+      return res.status(200).send(newOrder);
     }
   } else {
     const session = await getSession({ req });
@@ -279,7 +285,7 @@ export default async function handler(
       const locations = await prisma.locations.findMany({
         where: { companyId, isArchived: false },
       });
-      const locationIds = locations.map((location) => location.id);
+      const locationIds = locations.map((location: Locations) => location.id);
       const menusMenuCategoriesLocations =
         await prisma.menusMenuCategoriesLocations.findMany({
           where: {
@@ -290,7 +296,7 @@ export default async function handler(
           },
         });
       const menuCategoryIds = menusMenuCategoriesLocations.map(
-        (item) => item.menuCategoryId
+        (item: MenusMenuCategoriesLocations) => item.menuCategoryId
       );
       const menuCategories = await prisma.menuCategories.findMany({
         where: {
@@ -301,8 +307,8 @@ export default async function handler(
         },
       });
       const menuIds = menusMenuCategoriesLocations
-        .map((item) => item.menuId)
-        .filter((item) => item !== null) as number[];
+        .map((item: MenusMenuCategoriesLocations) => item.menuId)
+        .filter((item: number) => item !== null) as number[];
       const menus = await prisma.menus.findMany({
         where: {
           id: {
@@ -320,7 +326,7 @@ export default async function handler(
         },
       });
       const addonCategoryIds = menusAddonCategories.map(
-        (item) => item.addonCategoryId
+        (item: MenusAddonCategories) => item.addonCategoryId
       );
       const addonCategories = await prisma.addonCategories.findMany({
         where: {
@@ -358,7 +364,7 @@ export default async function handler(
           },
         },
       });
-      const orderIds = orders.map((item) => item.id);
+      const orderIds = orders.map((item: Orders) => item.id);
       const orderlines = await prisma.orderlines.findMany({
         where: {
           orderId: {
