@@ -47,13 +47,13 @@ const RemoveMenuFromMenuCategory = ({
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle sx={{ textAlign: "center", mt: "0.5rem" }}>
-        Remove <span style={{ color: "blue" }}>{menu?.name}</span> From Menu
-        Category
+        Remove <span style={{ color: "primary.main" }}>{menu?.name}</span> From
+        Menu Category
       </DialogTitle>
       <DialogContent sx={{ mt: "0.5rem" }}>
         Are you sure you want to remove{" "}
-        <span style={{ color: "blue" }}>{menu?.name}</span> from this menu
-        category?
+        <span style={{ color: "primary.main" }}>{menu?.name}</span> from this
+        menu category?
       </DialogContent>
       <DialogActions sx={{ mb: "0.5rem", mr: "1rem" }}>
         <Button
