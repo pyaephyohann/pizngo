@@ -308,7 +308,7 @@ export default async function handler(
       });
       const menuIds = menusMenuCategoriesLocations
         .map((item: MenusMenuCategoriesLocations) => item.menuId)
-        .filter((item: number) => item !== null) as number[];
+        .filter((item: number | null) => item !== null) as number[];
       const menus = await prisma.menus.findMany({
         where: {
           id: {
