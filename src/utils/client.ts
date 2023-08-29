@@ -148,32 +148,32 @@ export const getCartTotalPrice = (cart: CartItem[]) => {
   return totalPrice;
 };
 
-export const getOrderlinesByOrderId = (
-  orderId: number,
+export const getOrderlinesByItemId = (
   orderlines: Orderlines[],
   menus: Menus[],
   addons: Addons[],
   addonCategories: AddonCategories[]
 ) => {
-  const validOrderlines = orderlines.filter((item) => item.orderId === orderId);
-  const menuIds = [] as number[];
-  validOrderlines.forEach((item) => {
-    const hasAdded = menuIds.includes(item.menuId);
-    if (!hasAdded) menuIds.push(item.menuId);
+  const orderlinesItemIds = orderlines.map((item) => item.itemId);
+  const itemIds = [] as string[];
+  orderlinesItemIds.forEach((item) => {
+    const hasAdded = itemIds.includes(item);
+    if (!hasAdded) itemIds.push(item);
   });
-  const orderlineDatas = menuIds.map((menuId) => {
-    const addonIds = validOrderlines
-      .filter((item) => item.menuId === menuId)
+  const orderlineDatas = itemIds.map((itemId) => {
+    const addonIds = orderlines
+      .filter((item) => item.itemId === itemId)
       .map((item) => item.addonId);
     const orderlineAddons = addons.filter((addon) =>
       addonIds.includes(addon.id)
     );
-    const menu = menus.find((item) => item.id === menuId) as Menus;
-    const status = validOrderlines.find(
-      (item) => item.menuId === menuId
-    )?.status;
-    const quantity = validOrderlines.find(
-      (item) => item.menuId === menuId
+    const orderline = orderlines.find(
+      (item) => item.itemId === itemId
+    ) as Orderlines;
+    const menu = menus.find((item) => item.id === orderline.menuId) as Menus;
+    const status = orderlines.find((item) => item.itemId === itemId)?.status;
+    const quantity = orderlines.find(
+      (item) => item.itemId === itemId
     )?.quantity;
     const addonWithCategories: { [key: number]: Addons[] } = {};
     orderlineAddons.map((addon) => {
@@ -189,7 +189,7 @@ export const getOrderlinesByOrderId = (
         ];
       }
     });
-    return { menu, addonWithCategories, status, quantity };
+    return { menu, addonWithCategories, status, quantity, itemId };
   });
   return orderlineDatas;
 };

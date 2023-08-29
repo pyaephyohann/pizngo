@@ -9,8 +9,7 @@ interface OrderlinesState {
 }
 
 interface UpdateOrderlinePayload {
-  menuId: number;
-  orderId: number;
+  itemId: string;
   status: OrderStatus;
 }
 
@@ -22,7 +21,7 @@ const initialState: OrderlinesState = {
 
 export const updateOrderlineStatus = createAsyncThunk(
   "orderlines/updateOrderlineStatus",
-  async (payload: UpdateOrderlinePayload) => {
+  async (payload: UpdateOrderlinePayload, thunkAPI) => {
     await fetch(`${config.apiBaseUrl}/orderlines`, {
       method: "PUT",
       headers: {
@@ -30,6 +29,7 @@ export const updateOrderlineStatus = createAsyncThunk(
       },
       body: JSON.stringify(payload),
     });
+    thunkAPI.dispatch(updateOrderline(payload));
   }
 );
 
@@ -40,9 +40,17 @@ export const orderlinesSlice = createSlice({
     setOrderlines: (state, action: PayloadAction<Orderlines[]>) => {
       state.items = action.payload;
     },
+    updateOrderline: (state, action) => {
+      state.items = state.items.map((item) => {
+        if (item.itemId === action.payload.itemId) {
+          return { ...item, status: action.payload.status };
+        }
+        return item;
+      });
+    },
   },
 });
 
-export const { setOrderlines } = orderlinesSlice.actions;
+export const { setOrderlines, updateOrderline } = orderlinesSlice.actions;
 
 export default orderlinesSlice.reducer;

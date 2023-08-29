@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
 import {
   getNumberOfMenusByOrderId,
-  getOrderlinesByOrderId,
+  getOrderlinesByItemId,
   getSelectedLocationId,
 } from "@/utils/client";
 import {
@@ -23,7 +23,12 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { AddonCategories, OrderStatus, Orders } from "@prisma/client";
+import {
+  AddonCategories,
+  OrderStatus,
+  Orderlines,
+  Orders,
+} from "@prisma/client";
 import { useState } from "react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -48,10 +53,13 @@ const Orders = () => {
   const Row = ({ order }: Props) => {
     const [open, setOpen] = useState(false);
 
+    const orderlinesByOrderId = orderlines.filter(
+      (item) => item.orderId === order.id
+    );
+
     const RenderOrderlines = () => {
-      const validOrderlines = getOrderlinesByOrderId(
-        order.id,
-        orderlines,
+      const validOrderlines = getOrderlinesByItemId(
+        orderlinesByOrderId,
         menus,
         addons,
         addonCategories
@@ -61,12 +69,11 @@ const Orders = () => {
         event: SelectChangeEvent<
           "PENDING" | "PREPARING" | "COMPLETE" | "REJECTED"
         >,
-        menuId: number
+        itemId: string
       ) => {
         dispatch(
           updateOrderlineStatus({
-            menuId,
-            orderId: order.id,
+            itemId,
             status: event.target.value as OrderStatus,
           })
         );
@@ -108,7 +115,7 @@ const Orders = () => {
                 <Box sx={{ height: "16rem", overflowY: "scroll" }}>
                   {Object.keys(item.addonWithCategories).map((key) => {
                     const addonCategory = addonCategories.find(
-                      (item) => item.id === Number(key)
+                      (item: AddonCategories) => item.id === Number(key)
                     ) as AddonCategories;
                     const orderlineAddons =
                       item.addonWithCategories[addonCategory.id];
@@ -144,7 +151,7 @@ const Orders = () => {
                       defaultValue={item.status}
                       label="Status"
                       onChange={(event) =>
-                        handleUpdateOrderlineStatus(event, item.menu.id)
+                        handleUpdateOrderlineStatus(event, item.itemId)
                       }
                     >
                       <MenuItem value={OrderStatus.PENDING}>Pending</MenuItem>

@@ -7,11 +7,11 @@ export default async function handler(
 ) {
   const method = req.method;
   if (method === "PUT") {
-    const { menuId, orderId, status } = req.body;
-    const isValid = menuId && orderId && status;
+    const { itemId, status } = req.body;
+    const isValid = itemId && status;
     if (!isValid) return res.status(400).send("Bad Request");
     await prisma.orderlines.updateMany({
-      where: { orderId, menuId },
+      where: { itemId },
       data: { status },
     });
     return res.status(200).send("ok");

@@ -147,6 +147,7 @@ model Orderlines {
   order     Orders   @relation(fields: [orderId], references: [id])
   addonId   Int?
   addon     Addons?   @relation(fields: [addonId], references: [id])
+  itemId String
   status OrderStatus @default(PENDING)
   quantity  Int      @default(1)
   createdAt DateTime @default(now())

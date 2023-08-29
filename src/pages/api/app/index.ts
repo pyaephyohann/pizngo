@@ -124,6 +124,7 @@ export default async function handler(
         if (hasAddons) {
           const addons = cartItem.addons;
           const orderLineDatas = addons.map((addon) => ({
+            itemId: cartItem.id,
             menuId: menu.id,
             orderId: newOrder.id,
             addonId: addon.id,
@@ -133,6 +134,7 @@ export default async function handler(
         } else {
           await prisma.orderlines.create({
             data: {
+              itemId: cartItem.id,
               menuId: menu.id,
               orderId: newOrder.id,
               quantity: cartItem.quantity,
