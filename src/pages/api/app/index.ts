@@ -113,7 +113,6 @@ export default async function handler(
       const locationId = Number(req.query.locationId);
       const tableId = Number(req.query.tableId);
       const cart = req.body.cart;
-
       const isValid = locationId && tableId && cart.length;
       if (!isValid) return res.status(400).send("Bad Request");
       const orderData = {
