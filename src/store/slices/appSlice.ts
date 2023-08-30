@@ -1,5 +1,6 @@
 import { config } from "@/config";
 import {
+  PayloadAction,
   createAsyncThunk,
   createSelector,
   createSlice,
@@ -76,9 +77,11 @@ export const fetchAppData = createAsyncThunk(
     if (!selectedLocationId) {
       localStorage.setItem("selectedLocationId", locations[0].id);
     }
+    thunkAPI.dispatch(setInit(true));
   }
 );
 
+export const selectApp = (state: RootState) => state.app;
 export const selectUser = (state: RootState) => state.user.items;
 export const selectCompany = (state: RootState) => state.company.items;
 export const selectLocations = (state: RootState) => state.locations.items;
@@ -99,6 +102,7 @@ export const selectCart = (state: RootState) => state.cart.items;
 
 export const appData = createSelector(
   [
+    selectApp,
     selectUser,
     selectCompany,
     selectLocations,
@@ -114,6 +118,7 @@ export const appData = createSelector(
     selectCart,
   ],
   (
+    app,
     user,
     company,
     locations,
@@ -129,6 +134,7 @@ export const appData = createSelector(
     cart
   ) => {
     return {
+      app,
       user,
       company,
       locations,
@@ -153,9 +159,12 @@ export const appSlice = createSlice({
     setAppLoading: (state, action) => {
       state.isLoading = action.payload;
     },
+    setInit: (state, action: PayloadAction<boolean>) => {
+      state.init = action.payload;
+    },
   },
 });
 
-export const { setAppLoading } = appSlice.actions;
+export const { setAppLoading, setInit } = appSlice.actions;
 
 export default appSlice.reducer;
