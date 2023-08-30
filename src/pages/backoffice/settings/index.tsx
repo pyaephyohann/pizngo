@@ -114,7 +114,7 @@ const Settings = () => {
           <InputLabel>Locations</InputLabel>
           <Select
             value={selectedLocation ? selectedLocation.id : locations[0].id}
-            label="Locations"
+            label="Location"
             onChange={handleSelectLocation}
           >
             {locations.map((item) => {
