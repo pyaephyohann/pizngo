@@ -73,10 +73,7 @@ export const fetchAppData = createAsyncThunk(
     thunkAPI.dispatch(setOrders(orders));
     thunkAPI.dispatch(setOrderlines(orderlines));
     thunkAPI.dispatch(setAppLoading(false));
-    const selectedLocationId = getSelectedLocationId();
-    if (!selectedLocationId) {
-      localStorage.setItem("selectedLocationId", locations[0].id);
-    }
+    localStorage.setItem("selectedLocationId", locations[0].id);
     thunkAPI.dispatch(setInit(true));
   }
 );
