@@ -1,6 +1,6 @@
 import { config } from "@/config";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { appData, selectLocations } from "@/store/slices/appSlice";
+import { appData } from "@/store/slices/appSlice";
 import { updateCompany } from "@/store/slices/companySlice";
 import { getSelectedLocationId } from "@/utils/client";
 import {
