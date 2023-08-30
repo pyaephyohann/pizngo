@@ -113,7 +113,9 @@ const Settings = () => {
         <FormControl fullWidth>
           <InputLabel>Locations</InputLabel>
           <Select
-            defaultValue={selectedLocation ? selectedLocation.id : ""}
+            defaultValue={
+              selectedLocation ? selectedLocation.id : locations[0].id
+            }
             label="Locations"
             onChange={handleSelectLocation}
           >
