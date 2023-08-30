@@ -113,7 +113,7 @@ const Settings = () => {
         <FormControl fullWidth>
           <InputLabel>Locations</InputLabel>
           <Select
-            value={selectedLocation ? selectedLocation.id : ""}
+            value={selectedLocation ? selectedLocation.id : locations[0].id}
             label="Locations"
             onChange={handleSelectLocation}
           >
