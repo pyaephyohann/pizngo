@@ -6,9 +6,11 @@ import { Box, Button } from "@mui/material";
 import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import NewMenu from "./NewMenu";
+import Loading from "@/components/Loading";
 
 const Menus = () => {
-  const { menus, menusMenuCategoriesLocations } = useAppSelector(appData);
+  const { isLoading, menus, menusMenuCategoriesLocations } =
+    useAppSelector(appData);
   const selectedLocationId = getSelectedLocationId() as string;
   const [open, setOpen] = useState<boolean>(false);
 
@@ -17,6 +19,8 @@ const Menus = () => {
     menusMenuCategoriesLocations,
     menus
   );
+
+  if (isLoading) return <Loading />;
 
   return (
     <Box>

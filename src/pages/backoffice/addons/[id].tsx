@@ -20,12 +20,14 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "@/components/DeleteDialog";
+import Loading from "@/components/Loading";
 
 const EditAddon = () => {
   const router = useRouter();
   const addonId = router.query.id;
 
   const {
+    isLoading,
     addons,
     addonCategories,
     menusAddonCategories,
@@ -73,6 +75,8 @@ const EditAddon = () => {
       setAddon(validAddon);
     }
   }, [addonId, addons]);
+
+  if (isLoading) return <Loading />;
 
   if (!addon) return <Box>Addon not found</Box>;
 

@@ -134,7 +134,7 @@ export const appData = createSelector(
     cart
   ) => {
     return {
-      app,
+      isLoading: app.isLoading,
       user,
       company,
       locations,

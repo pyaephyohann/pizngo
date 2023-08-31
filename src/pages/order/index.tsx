@@ -8,13 +8,14 @@ import { MenuCategories } from "@prisma/client";
 import { useRouter } from "next/router";
 import { getMenusByMenuCategoryId } from "@/utils/client";
 import MenuCard from "@/components/MenuCard";
+import Loading from "@/components/Loading";
 
 const Order = () => {
   const router = useRouter();
   const query = router.query;
   const selectedLocationId = query.locationId as string;
 
-  const { menus, menuCategories, menusMenuCategoriesLocations } =
+  const { isLoading, menus, menuCategories, menusMenuCategoriesLocations } =
     useAppSelector(appData);
 
   const [value, setValue] = useState(0);
@@ -46,6 +47,8 @@ const Order = () => {
       return <MenuCard key={item.id} menu={item} href={href} />;
     });
   };
+
+  if (isLoading) return <Loading />;
 
   return (
     <Box sx={{ mt: "1rem" }}>

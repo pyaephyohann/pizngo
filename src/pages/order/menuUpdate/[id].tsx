@@ -18,13 +18,14 @@ import { AddonCategories, Addons } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Loading from "@/components/Loading";
 
 const MenuUpdate = () => {
   const router = useRouter();
   const query = router.query;
   const cartItemId = query.id;
 
-  const { addonCategories, addons, menusAddonCategories, cart } =
+  const { isLoading, addonCategories, addons, menusAddonCategories, cart } =
     useAppSelector(appData);
 
   const dispatch = useAppDispatch();
@@ -187,6 +188,8 @@ const MenuUpdate = () => {
       </FormControl>
     );
   };
+
+  if (isLoading) return <Loading />;
 
   if (!cartItem) return null;
 

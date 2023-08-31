@@ -8,11 +8,12 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "@/components/DeleteDialog";
+import Loading from "@/components/Loading";
 
 const EditTable = () => {
   const router = useRouter();
   const tableId = router.query.id;
-  const { tables } = useAppSelector(appData);
+  const { isLoading, tables } = useAppSelector(appData);
 
   const dispatch = useAppDispatch();
 
@@ -43,6 +44,8 @@ const EditTable = () => {
     dispatch(deleteTable(table));
     router.push("/backoffice/tables");
   };
+
+  if (isLoading) return <Loading />;
 
   if (!table) return <Box>Table not found</Box>;
 

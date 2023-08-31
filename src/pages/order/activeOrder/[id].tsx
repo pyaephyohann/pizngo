@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData } from "@/store/slices/appSlice";
 import { emptyCart } from "@/store/slices/cartSlice";
@@ -10,7 +11,7 @@ const ActiveOrder = () => {
   const { query, isReady } = router;
 
   const orderId = query.id;
-  const { orders } = useAppSelector(appData);
+  const { isLoading, orders } = useAppSelector(appData);
 
   const dispatch = useAppDispatch();
 
@@ -25,6 +26,8 @@ const ActiveOrder = () => {
   useEffect(() => {
     dispatch(emptyCart());
   }, [dispatch]);
+
+  if (isLoading) return <Loading />;
 
   if (!order) return null;
 
