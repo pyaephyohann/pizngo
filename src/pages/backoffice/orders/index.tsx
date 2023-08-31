@@ -23,19 +23,14 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import {
-  AddonCategories,
-  OrderStatus,
-  Orderlines,
-  Orders,
-} from "@prisma/client";
+import { AddonCategories, OrderStatus, Orders, Tables } from "@prisma/client";
 import { useState } from "react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { updateOrderlineStatus } from "@/store/slices/orderlinesSlice";
 
 const Orders = () => {
-  const { orders, orderlines, addons, addonCategories, menus } =
+  const { orders, orderlines, addons, addonCategories, menus, tables } =
     useAppSelector(appData);
 
   const dispatch = useAppDispatch();
@@ -56,6 +51,8 @@ const Orders = () => {
     const orderlinesByOrderId = orderlines.filter(
       (item) => item.orderId === order.id
     );
+
+    const table = tables.find((item) => item.id === order.tableId) as Tables;
 
     const RenderOrderlines = () => {
       const validOrderlines = getOrderlinesByItemId(
@@ -184,7 +181,7 @@ const Orders = () => {
           <TableCell align="center">
             {getNumberOfMenusByOrderId(order.id, orderlines)}
           </TableCell>
-          <TableCell align="center">{order.tableId}</TableCell>
+          <TableCell align="center">{table.name}</TableCell>
           <TableCell align="center">{order.isPaid ? "Yes" : "No"}</TableCell>
           <TableCell align="center">{order.price}</TableCell>
         </TableRow>
