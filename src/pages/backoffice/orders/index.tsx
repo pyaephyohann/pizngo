@@ -29,6 +29,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { updateOrderlineStatus } from "@/store/slices/orderlinesSlice";
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 
 const Orders = () => {
   const {
@@ -44,6 +45,8 @@ const Orders = () => {
   const dispatch = useAppDispatch();
 
   const selectedLocationId = getSelectedLocationId();
+
+  const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
 
   const currentLocationOrders = orders.filter(
     (item) => item.locationId === Number(selectedLocationId)
@@ -82,10 +85,11 @@ const Orders = () => {
             status: event.target.value as OrderStatus,
           })
         );
+        setOpenSuccessAlert(true);
       };
 
       return (
-        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+        <Box sx={{ display: "flex" }}>
           {validOrderlines.map((item) => {
             return (
               <Box
@@ -189,7 +193,7 @@ const Orders = () => {
           <TableCell align="center">
             {getNumberOfMenusByOrderId(order.id, orderlines)}
           </TableCell>
-          <TableCell align="center">{table.name}</TableCell>
+          <TableCell align="center">{table ? table.name : ""}</TableCell>
           <TableCell align="center">{order.isPaid ? "Yes" : "No"}</TableCell>
           <TableCell align="center">{order.price}</TableCell>
         </TableRow>
@@ -227,6 +231,11 @@ const Orders = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <SuccessAlert
+        open={openSuccessAlert}
+        setOpen={setOpenSuccessAlert}
+        message="Order status successfully changed"
+      />
     </Box>
   );
 };

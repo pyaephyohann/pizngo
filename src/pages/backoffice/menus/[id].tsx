@@ -18,6 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "@/components/DeleteDialog";
 import { fetchMenusMenuCategoriesLocations } from "@/store/slices/menusMenuCategoriesLocationsSlice";
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 
 const EditMenu = () => {
   const router = useRouter();
@@ -37,6 +38,8 @@ const EditMenu = () => {
   const [menuToUpdate, setMenuToUpdate] = useState<Partial<Menus>>();
 
   const [open, setOpen] = useState<boolean>(false);
+
+  const [openSuccessAlert, setOPenSuccessAlert] = useState(false);
 
   const onFileSelected = async (acceptedFile: File[]) => {
     const formData = new FormData();
@@ -77,6 +80,9 @@ const EditMenu = () => {
     const updatedMenu = await response.json();
     dispatch(fetchMenusAddonCategories(menuIds));
     const isEmptyUpdatedMenu = Object.keys(updatedMenu).length === 0;
+    if (response.status === 200) {
+      setOPenSuccessAlert(true);
+    }
     if (isEmptyUpdatedMenu) return;
     dispatch(updateMenu(updatedMenu));
   };
@@ -196,6 +202,11 @@ const EditMenu = () => {
         setOpen={setOpen}
         title="Are you sure you want to delete this menu"
         callBack={handleDeleteMenu}
+      />
+      <SuccessAlert
+        open={openSuccessAlert}
+        setOpen={setOPenSuccessAlert}
+        message="Menu updated successfully"
       />
     </Box>
   );

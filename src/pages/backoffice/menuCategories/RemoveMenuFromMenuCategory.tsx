@@ -17,6 +17,7 @@ interface Props {
   setOpen: (value: boolean) => void;
   menu?: Menus;
   menuCategoryId: number;
+  setOpenSuccessAlertForRemoveMenu: (value: boolean) => void;
 }
 
 const RemoveMenuFromMenuCategory = ({
@@ -24,26 +25,34 @@ const RemoveMenuFromMenuCategory = ({
   setOpen,
   menu,
   menuCategoryId,
+  setOpenSuccessAlertForRemoveMenu,
 }: Props) => {
   const selectedLocationId = getSelectedLocationId() as string;
 
   const dispatch = useAppDispatch();
 
   const handleRemoveMenuFromMenuCategory = async () => {
-    await fetch(`${config.apiBaseUrl}/menuCategories/removeMenu`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        menuId: menu?.id,
-        menuCategoryId,
-        locationId: Number(selectedLocationId),
-      }),
-    });
+    const response = await fetch(
+      `${config.apiBaseUrl}/menuCategories/removeMenu`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          menuId: menu?.id,
+          menuCategoryId,
+          locationId: Number(selectedLocationId),
+        }),
+      }
+    );
     dispatch(fetchMenusMenuCategoriesLocations(selectedLocationId));
     setOpen(false);
+    if (response.status === 200) {
+      setOpenSuccessAlertForRemoveMenu(true);
+    }
   };
+
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle sx={{ textAlign: "center", mt: "0.5rem" }}>

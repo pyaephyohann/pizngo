@@ -21,9 +21,10 @@ import { useState } from "react";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
+  setOpenSuccessAlert: (value: boolean) => void;
 }
 
-const NewAddonCategory = ({ open, setOpen }: Props) => {
+const NewAddonCategory = ({ open, setOpen, setOpenSuccessAlert }: Props) => {
   const selectedLocationId = getSelectedLocationId();
   const { menus, menusMenuCategoriesLocations } = useAppSelector(appData);
 
@@ -62,6 +63,9 @@ const NewAddonCategory = ({ open, setOpen }: Props) => {
     dispatch(addAddonCategory(createdAddonCategory));
     dispatch(fetchMenusAddonCategories(validMenuIds));
     setOpen(false);
+    if (response.status === 200) {
+      setOpenSuccessAlert(true);
+    }
   };
 
   return (

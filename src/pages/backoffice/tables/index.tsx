@@ -8,12 +8,15 @@ import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import NewTable from "./NewTable";
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 
 const Tables = () => {
   const { isLoading, tables } = useAppSelector(appData);
   const selectedLocationId = getSelectedLocationId();
 
   const [open, setOpen] = useState<boolean>(false);
+
+  const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
 
   const validTables = tables.filter(
     (item) => item.locationId === Number(selectedLocationId)
@@ -48,7 +51,16 @@ const Tables = () => {
           );
         })}
       </Box>
-      <NewTable open={open} setOpen={setOpen} />
+      <NewTable
+        open={open}
+        setOpen={setOpen}
+        setOpenSuccessAlert={setOpenSuccessAlert}
+      />
+      <SuccessAlert
+        open={openSuccessAlert}
+        setOpen={setOpenSuccessAlert}
+        message="New table created successfully"
+      />
     </Box>
   );
 };

@@ -9,6 +9,7 @@ import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "@/components/DeleteDialog";
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 
 const EditTable = () => {
   const router = useRouter();
@@ -23,6 +24,8 @@ const EditTable = () => {
 
   const [open, setOpen] = useState<boolean>(false);
 
+  const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
+
   const handleUpdateTable = async () => {
     const response = await fetch(`${config.apiBaseUrl}/tables`, {
       method: "PUT",
@@ -32,6 +35,9 @@ const EditTable = () => {
       body: JSON.stringify({ name: tableName, id: Number(tableId) }),
     });
     const updatedTable = await response.json();
+    if (response.status === 200) {
+      setOpenSuccessAlert(true);
+    }
     const isEmptyUpdatedTable = Object.keys(updatedTable).length === 0;
     if (isEmptyUpdatedTable) return;
     dispatch(updateTable(updatedTable));
@@ -85,6 +91,11 @@ const EditTable = () => {
         open={open}
         setOpen={setOpen}
         callBack={handleDeleteTable}
+      />
+      <SuccessAlert
+        open={openSuccessAlert}
+        setOpen={setOpenSuccessAlert}
+        message="Table updated successfully"
       />
     </Box>
   );

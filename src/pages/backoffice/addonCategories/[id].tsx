@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "@/components/DeleteDialog";
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 
 const EditAddonCategory = () => {
   const router = useRouter();
@@ -31,6 +32,8 @@ const EditAddonCategory = () => {
   const [addonCategory, setAddonCategory] = useState<AddonCategories>();
 
   const [open, setOpen] = useState<boolean>(false);
+
+  const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
 
   useEffect(() => {
     if (addonCategories.length) {
@@ -50,6 +53,9 @@ const EditAddonCategory = () => {
       body: JSON.stringify(addonCategory),
     });
     const updatedAddonCategory = await response.json();
+    if (response.status === 200) {
+      setOpenSuccessAlert(true);
+    }
     const isEmptyUpdatedAddonCategory =
       Object.keys(updatedAddonCategory).length === 0;
     if (isEmptyUpdatedAddonCategory) return;
@@ -128,6 +134,11 @@ const EditAddonCategory = () => {
         setOpen={setOpen}
         callBack={handleDeleteAddonCategory}
         title="Are you sure you want to delete this addon category?"
+      />
+      <SuccessAlert
+        open={openSuccessAlert}
+        setOpen={setOpenSuccessAlert}
+        message="Addon category updated successfully"
       />
     </Box>
   );
