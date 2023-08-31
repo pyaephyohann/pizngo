@@ -23,6 +23,7 @@ interface Props {
   setOpenAdd: (value: boolean) => void;
   menus: Menu[];
   menuCategoryId: number;
+  setOpenSuccessAlertForAddMenu: (value: boolean) => void;
 }
 
 const AddMenuToMenuCategory = ({
@@ -30,6 +31,7 @@ const AddMenuToMenuCategory = ({
   setOpenAdd,
   menus,
   menuCategoryId,
+  setOpenSuccessAlertForAddMenu,
 }: Props) => {
   const [selectedMenuIds, setSelectedMenuIds] = useState<number[]>([]);
 
@@ -42,19 +44,25 @@ const AddMenuToMenuCategory = ({
   const isDisabled = !selectedMenuIds.length;
 
   const handleAddMenuToMenuCategory = async () => {
-    await fetch(`${config.apiBaseUrl}/menuCategories/addMenu`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        menuCategoryId,
-        menuIds: selectedMenuIds,
-        locationId,
-      }),
-    });
+    const response = await fetch(
+      `${config.apiBaseUrl}/menuCategories/addMenu`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          menuCategoryId,
+          menuIds: selectedMenuIds,
+          locationId,
+        }),
+      }
+    );
     dispatch(fetchMenusMenuCategoriesLocations(selectedLocationId));
     setOpenAdd(false);
+    if (response.status === 200) {
+      setOpenSuccessAlertForAddMenu(true);
+    }
   };
 
   return (

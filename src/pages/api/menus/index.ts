@@ -1,4 +1,5 @@
 import { prisma } from "@/utils/server";
+import { MenusAddonCategories } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -81,7 +82,7 @@ export default async function handler(
         });
 
       const existingAddonCategoryIds = existingAddonCategories.map(
-        (item) => item.addonCategoryId
+        (item: MenusAddonCategories) => item.addonCategoryId
       );
 
       // db --> [1,2]  payload --> [1,2,3]
@@ -90,7 +91,7 @@ export default async function handler(
       );
       // db --> [1,2] payload --> [1]
       const removedAddonCategoryIds = existingAddonCategoryIds.filter(
-        (item) => !addonCategoryIds.includes(item)
+        (item: number) => !addonCategoryIds.includes(item)
       );
       if (removedAddonCategoryIds.length) {
         await prisma.menusAddonCategories.deleteMany({

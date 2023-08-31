@@ -19,9 +19,10 @@ import { useState } from "react";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
+  setOpenSuccessAlert: (value: boolean) => void;
 }
 
-const NewMenuCategory = ({ open, setOpen }: Props) => {
+const NewMenuCategory = ({ open, setOpen, setOpenSuccessAlert }: Props) => {
   const { locations } = useAppSelector(appData);
   const [newMenuCategory, setNewMenuCategory] = useState({
     name: "",
@@ -52,6 +53,9 @@ const NewMenuCategory = ({ open, setOpen }: Props) => {
     dispatch(addMenuCategory(createdMenuCategory));
     dispatch(fetchMenusMenuCategoriesLocations(selectedLocationId));
     setOpen(false);
+    if (response.status === 200) {
+      setOpenSuccessAlert(true);
+    }
   };
 
   return (

@@ -33,6 +33,7 @@ import RemoveMenuFromMenuCategory from "./RemoveMenuFromMenuCategory";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "@/components/DeleteDialog";
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 
 const EditMenuCategory = () => {
   const router = useRouter();
@@ -44,6 +45,15 @@ const EditMenuCategory = () => {
   const [openRemove, setOpenRemove] = useState<boolean>(false);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
+
+  const [openSuccessAlertForUpdate, setOpenSuccessAlertForUpdate] =
+    useState(false);
+
+  const [openSuccessAlertForAddMenu, setOpenSuccessAlertForAddMenu] =
+    useState(false);
+
+  const [openSuccessAlertForRemoveMenu, setOpenSuccessAlertForRemoveMenu] =
+    useState(false);
 
   const [selectedMenuToRemove, setSelectedMenuToRemove] = useState<Menus>();
 
@@ -112,6 +122,10 @@ const EditMenuCategory = () => {
     const updatedMenuCategory = await response.json();
 
     dispatch(fetchMenusMenuCategoriesLocations(selectedLocationId));
+
+    if (response.status === 200) {
+      setOpenSuccessAlertForUpdate(true);
+    }
 
     const isEmptyUpdatedMenuCategory =
       Object.keys(updatedMenuCategory).length === 0;
@@ -251,12 +265,14 @@ const EditMenuCategory = () => {
           openAdd={openAdd}
           setOpenAdd={setOpenAdd}
           menus={mappedInvalidMenus}
+          setOpenSuccessAlertForAddMenu={setOpenSuccessAlertForAddMenu}
         />
         <RemoveMenuFromMenuCategory
           open={openRemove}
           setOpen={setOpenRemove}
           menu={selectedMenuToRemove}
           menuCategoryId={Number(menuCategoryId)}
+          setOpenSuccessAlertForRemoveMenu={setOpenSuccessAlertForRemoveMenu}
         />
         <DeleteDialog
           open={openDeleteDialog}
@@ -265,6 +281,24 @@ const EditMenuCategory = () => {
           callBack={handleDeleteMenuCategory}
         />
       </Box>
+      {/* alert for update menu category */}
+      <SuccessAlert
+        open={openSuccessAlertForUpdate}
+        setOpen={setOpenSuccessAlertForUpdate}
+        message="Menu category successfully updated"
+      />
+      {/* alert for add menu */}
+      <SuccessAlert
+        open={openSuccessAlertForAddMenu}
+        setOpen={setOpenSuccessAlertForAddMenu}
+        message="Menu added successfully"
+      />
+      {/* alert for remove menu */}
+      <SuccessAlert
+        open={openSuccessAlertForRemoveMenu}
+        setOpen={setOpenSuccessAlertForRemoveMenu}
+        message="Menu removed successfully"
+      />
     </Box>
   );
 };

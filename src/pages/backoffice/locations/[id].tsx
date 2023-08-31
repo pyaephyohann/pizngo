@@ -9,14 +9,21 @@ import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "@/components/DeleteDialog";
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 
 const EditLocation = () => {
   const router = useRouter();
   const locationId = router.query.id;
+
   const [location, setLocation] = useState<Locations>();
+
   const { isLoading, locations } = useAppSelector(appData);
+
   const dispatch = useAppDispatch();
+
   const [open, setOpen] = useState<boolean>(false);
+
+  const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
 
   useEffect(() => {
     if (locations.length) {
@@ -39,6 +46,9 @@ const EditLocation = () => {
     });
     const updatedLocation = await response.json();
     dispatch(updateLocation(updatedLocation));
+    if (response.status === 200) {
+      setOpenSuccessAlert(true);
+    }
   };
 
   const handleDeleteLocation = async () => {
@@ -69,12 +79,13 @@ const EditLocation = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          width: "20rem",
-          ml: "2rem",
-          mt: "1rem",
+          alignItems: "center",
+          justifyContent: "center",
+          mt: "2rem",
         }}
       >
         <TextField
+          label="Name"
           onChange={(event) =>
             location && setLocation({ ...location, name: event.target.value })
           }
@@ -82,6 +93,7 @@ const EditLocation = () => {
           placeholder="Name"
         />
         <TextField
+          label="Address"
           onChange={(event) =>
             location &&
             setLocation({ ...location, address: event.target.value })
@@ -104,6 +116,11 @@ const EditLocation = () => {
         open={open}
         setOpen={setOpen}
         callBack={handleDeleteLocation}
+      />
+      <SuccessAlert
+        open={openSuccessAlert}
+        setOpen={setOpenSuccessAlert}
+        message="Location updated successfully"
       />
     </Box>
   );

@@ -16,9 +16,10 @@ import { useState } from "react";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
+  setOpenSuccessAlert: (value: boolean) => void;
 }
 
-const NewTable = ({ open, setOpen }: Props) => {
+const NewTable = ({ open, setOpen, setOpenSuccessAlert }: Props) => {
   const selectedLocationId = getSelectedLocationId();
 
   const [newTable, setNewTable] = useState({
@@ -39,6 +40,9 @@ const NewTable = ({ open, setOpen }: Props) => {
     const createdTable = await response.json();
     dispatch(addTable(createdTable));
     setOpen(false);
+    if (response.status === 200) {
+      setOpenSuccessAlert(true);
+    }
   };
 
   const isDisabled = !newTable.name;
