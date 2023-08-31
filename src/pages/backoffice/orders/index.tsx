@@ -28,10 +28,18 @@ import { useState } from "react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { updateOrderlineStatus } from "@/store/slices/orderlinesSlice";
+import Loading from "@/components/Loading";
 
 const Orders = () => {
-  const { orders, orderlines, addons, addonCategories, menus, tables } =
-    useAppSelector(appData);
+  const {
+    isLoading,
+    orders,
+    orderlines,
+    addons,
+    addonCategories,
+    menus,
+    tables,
+  } = useAppSelector(appData);
 
   const dispatch = useAppDispatch();
 
@@ -195,6 +203,8 @@ const Orders = () => {
       </>
     );
   };
+
+  if (isLoading) return <Loading />;
 
   return (
     <Box>

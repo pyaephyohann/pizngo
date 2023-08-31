@@ -11,9 +11,10 @@ import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import NewMenuCategory from "./NewMenuCategory";
 import { MenusMenuCategoriesLocations } from "@prisma/client";
+import Loading from "@/components/Loading";
 
 const MenuCategories = () => {
-  const { menuCategories, menusMenuCategoriesLocations } =
+  const { isLoading, menuCategories, menusMenuCategoriesLocations } =
     useAppSelector(appData);
 
   const selectedLocationId = getSelectedLocationId() as string;
@@ -35,6 +36,8 @@ const MenuCategories = () => {
         item.locationId === Number(selectedLocationId)
     ).length;
   };
+
+  if (isLoading) return <Loading />;
 
   return (
     <Box>

@@ -18,12 +18,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "@/components/DeleteDialog";
+import Loading from "@/components/Loading";
 
 const EditAddonCategory = () => {
   const router = useRouter();
   const addonCategoryId = router.query.id;
 
-  const { addonCategories } = useAppSelector(appData);
+  const { isLoading, addonCategories } = useAppSelector(appData);
 
   const dispatch = useAppDispatch();
 
@@ -62,6 +63,8 @@ const EditAddonCategory = () => {
     addonCategory && dispatch(deleteAddonCategory(addonCategory));
     router.push("/backoffice/addonCategories");
   };
+
+  if (isLoading) return <Loading />;
 
   if (!addonCategory)
     return (
