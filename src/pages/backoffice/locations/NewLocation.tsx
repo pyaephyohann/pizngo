@@ -16,9 +16,10 @@ import { useState } from "react";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
+  setOpenSuccessAlert: (value: boolean) => void;
 }
 
-const NewLocation = ({ open, setOpen }: Props) => {
+const NewLocation = ({ open, setOpen, setOpenSuccessAlert }: Props) => {
   const { company } = useAppSelector(appData);
   const dispatch = useAppDispatch();
   const [newLocation, setNewLocation] = useState({
@@ -46,6 +47,9 @@ const NewLocation = ({ open, setOpen }: Props) => {
       address: "",
       companyId: company?.id,
     });
+    if (response.status === 200) {
+      setOpenSuccessAlert(true);
+    }
   };
 
   return (
@@ -68,7 +72,7 @@ const NewLocation = ({ open, setOpen }: Props) => {
           placeholder="Address"
         />
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ mb: "0.5rem" }}>
         <Button
           onClick={handleCreateNewLocation}
           disabled={isDisabled}

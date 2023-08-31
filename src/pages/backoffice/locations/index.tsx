@@ -7,10 +7,14 @@ import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import NewLocation from "./NewLocation";
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 
 const Locations = () => {
   const { isLoading, locations } = useAppSelector(appData);
+
   const [open, setOpen] = useState<boolean>(false);
+
+  const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
 
   if (isLoading) return <Loading />;
 
@@ -25,7 +29,7 @@ const Locations = () => {
           Add Location
         </Button>
       </Box>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {locations.map((item) => {
           return (
             <ItemCard
@@ -41,7 +45,16 @@ const Locations = () => {
           );
         })}
       </Box>
-      <NewLocation open={open} setOpen={setOpen} />
+      <NewLocation
+        open={open}
+        setOpen={setOpen}
+        setOpenSuccessAlert={setOpenSuccessAlert}
+      />
+      <SuccessAlert
+        open={openSuccessAlert}
+        setOpen={setOpenSuccessAlert}
+        message="New location created successfully"
+      />
     </Box>
   );
 };

@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "@/components/DeleteDialog";
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 
 const EditAddon = () => {
   const router = useRouter();
@@ -49,6 +50,8 @@ const EditAddon = () => {
 
   const [open, setOpen] = useState<boolean>(false);
 
+  const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
+
   const handleUpdateAddon = async () => {
     const response = await fetch(`${config.apiBaseUrl}/addons`, {
       method: "PUT",
@@ -59,6 +62,9 @@ const EditAddon = () => {
     });
     const updatedAddon = await response.json();
     dispatch(updateAddon(updatedAddon));
+    if (response.status === 200) {
+      setOpenSuccessAlert(true);
+    }
   };
 
   const handleDeleteAddon = async () => {
@@ -156,6 +162,11 @@ const EditAddon = () => {
         open={open}
         setOpen={setOpen}
         callBack={handleDeleteAddon}
+      />
+      <SuccessAlert
+        open={openSuccessAlert}
+        setOpen={setOpenSuccessAlert}
+        message="Addon updated successfully"
       />
     </Box>
   );

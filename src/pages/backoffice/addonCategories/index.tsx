@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import NewAddonCategory from "./NewAddonCategory";
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 
 const AddonCategories = () => {
   const selectedLocationId = getSelectedLocationId();
@@ -22,6 +23,8 @@ const AddonCategories = () => {
   } = useAppSelector(appData);
 
   const [open, setOpen] = useState<boolean>(false);
+
+  const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
 
   const validMenuIds = menusMenuCategoriesLocations
     .filter(
@@ -78,7 +81,16 @@ const AddonCategories = () => {
           );
         })}
       </Box>
-      <NewAddonCategory open={open} setOpen={setOpen} />
+      <NewAddonCategory
+        open={open}
+        setOpen={setOpen}
+        setOpenSuccessAlert={setOpenSuccessAlert}
+      />
+      <SuccessAlert
+        open={openSuccessAlert}
+        setOpen={setOpenSuccessAlert}
+        message="New addon category created successfully"
+      />
     </Box>
   );
 };

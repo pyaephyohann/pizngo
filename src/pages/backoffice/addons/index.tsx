@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import NewAddon from "./NewAddon";
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 
 const Addons = () => {
   const {
@@ -20,6 +21,8 @@ const Addons = () => {
   const selectedLocationId = getSelectedLocationId() as string;
 
   const [open, setOpen] = useState<boolean>(false);
+
+  const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
 
   const validAddons = getAddonsByLocationId(
     addons,
@@ -56,7 +59,16 @@ const Addons = () => {
           );
         })}
       </Box>
-      <NewAddon open={open} setOpen={setOpen} />
+      <NewAddon
+        open={open}
+        setOpen={setOpen}
+        setOpenSuccessAlert={setOpenSuccessAlert}
+      />
+      <SuccessAlert
+        open={openSuccessAlert}
+        setOpen={setOpenSuccessAlert}
+        message="New addon created successfully"
+      />
     </Box>
   );
 };

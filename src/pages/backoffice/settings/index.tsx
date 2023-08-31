@@ -1,4 +1,5 @@
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 import { config } from "@/config";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData, selectLocations } from "@/store/slices/appSlice";
@@ -23,6 +24,16 @@ const Settings = () => {
   const [newCompany, setNewCompany] = useState<Companies>();
   const [selectedLocation, setSelectedLocation] = useState<Locations>();
   const dispatch = useAppDispatch();
+
+  const [
+    openSuccessAlertForUpdateCompany,
+    setOpenSuccessAlertForUpdateCompany,
+  ] = useState(false);
+
+  const [
+    openSuccessAlertForSelectLocation,
+    setOpenSuccessAlertForSelectLocation,
+  ] = useState(false);
 
   useEffect(() => {
     if (locations.length) {
@@ -52,6 +63,9 @@ const Settings = () => {
     });
     const updatedCompany = await response.json();
     dispatch(updateCompany(updatedCompany));
+    if (response.status === 200) {
+      setOpenSuccessAlertForUpdateCompany(true);
+    }
   };
 
   const handleSelectLocation = (event: SelectChangeEvent<number>) => {
@@ -60,6 +74,7 @@ const Settings = () => {
       (item) => item.id === event.target.value
     );
     setSelectedLocation(selectedLocation);
+    setOpenSuccessAlertForSelectLocation(true);
   };
 
   if (isLoading) return <Loading />;
@@ -67,70 +82,84 @@ const Settings = () => {
   if (!company) return null;
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "space-evenly",
-        mt: "1rem",
-      }}
-    >
+    <Box>
       <Box
         sx={{
           display: "flex",
-          flexDirection: "column",
-          width: "15rem",
+          justifyContent: "space-evenly",
+          mt: "1rem",
         }}
       >
-        <Typography variant="h5" sx={{ textAlign: "center", mb: "1.5rem" }}>
-          Your Company
-        </Typography>
-        <TextField
-          onChange={(event) =>
-            newCompany &&
-            setNewCompany({ ...newCompany, name: event.target.value })
-          }
-          defaultValue={company.name}
-          placeholder="Name"
-        />
-        <TextField
-          onChange={(event) =>
-            newCompany &&
-            setNewCompany({ ...newCompany, address: event.target.value })
-          }
-          sx={{ my: "1.5rem" }}
-          defaultValue={company.address}
-          placeholder="Address"
-        />
-        <Button
-          onClick={handleUpdateCompany}
-          disabled={isDisabled}
-          sx={{ width: "fit-content", mx: "auto" }}
-          variant="contained"
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "15rem",
+          }}
         >
-          Update
-        </Button>
-      </Box>
-      <Box sx={{ width: "15rem" }}>
-        <Typography sx={{ mb: "2.5rem" }} variant="h5">
-          Select Your Location
-        </Typography>
-        <FormControl fullWidth>
-          <InputLabel>Locations</InputLabel>
-          <Select
-            value={selectedLocation ? selectedLocation.id : ""}
-            label="Locations"
-            onChange={handleSelectLocation}
+          <Typography variant="h5" sx={{ textAlign: "center", mb: "1.5rem" }}>
+            Your Company
+          </Typography>
+          <TextField
+            onChange={(event) =>
+              newCompany &&
+              setNewCompany({ ...newCompany, name: event.target.value })
+            }
+            defaultValue={company.name}
+            placeholder="Name"
+          />
+          <TextField
+            onChange={(event) =>
+              newCompany &&
+              setNewCompany({ ...newCompany, address: event.target.value })
+            }
+            sx={{ my: "1.5rem" }}
+            defaultValue={company.address}
+            placeholder="Address"
+          />
+          <Button
+            onClick={handleUpdateCompany}
+            disabled={isDisabled}
+            sx={{ width: "fit-content", mx: "auto" }}
+            variant="contained"
           >
-            {locations.map((item) => {
-              return (
-                <MenuItem key={item.id} value={item.id}>
-                  {item.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+            Update
+          </Button>
+        </Box>
+        <Box sx={{ width: "15rem" }}>
+          <Typography sx={{ mb: "2.5rem" }} variant="h5">
+            Select Your Location
+          </Typography>
+          <FormControl fullWidth>
+            <InputLabel>Locations</InputLabel>
+            <Select
+              value={selectedLocation ? selectedLocation.id : ""}
+              label="Locations"
+              onChange={handleSelectLocation}
+            >
+              {locations.map((item) => {
+                return (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.name}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
+      {/* alert for update company */}
+      <SuccessAlert
+        open={openSuccessAlertForUpdateCompany}
+        setOpen={setOpenSuccessAlertForUpdateCompany}
+        message="Company updated successfully"
+      />
+      {/* alert for select location */}
+      <SuccessAlert
+        open={openSuccessAlertForSelectLocation}
+        setOpen={setOpenSuccessAlertForSelectLocation}
+        message="Location changed"
+      />
     </Box>
   );
 };

@@ -24,9 +24,10 @@ import { useState } from "react";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
+  setOpenSuccessAlert: (value: boolean) => void;
 }
 
-const NewMenu = ({ open, setOpen }: Props) => {
+const NewMenu = ({ open, setOpen, setOpenSuccessAlert }: Props) => {
   const [menuImage, setMenuImage] = useState<File[]>([]);
   const { menuCategories, menusMenuCategoriesLocations } =
     useAppSelector(appData);
@@ -90,6 +91,9 @@ const NewMenu = ({ open, setOpen }: Props) => {
     dispatch(addMenu(createdMenu));
     dispatch(fetchMenusMenuCategoriesLocations(selectedLocationId));
     setOpen(false);
+    if (response.status === 200) {
+      setOpenSuccessAlert(true);
+    }
   };
 
   return (

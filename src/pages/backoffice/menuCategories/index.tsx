@@ -12,6 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import NewMenuCategory from "./NewMenuCategory";
 import { MenusMenuCategoriesLocations } from "@prisma/client";
 import Loading from "@/components/Loading";
+import SuccessAlert from "@/components/SuccessAlert";
 
 const MenuCategories = () => {
   const { isLoading, menuCategories, menusMenuCategoriesLocations } =
@@ -20,6 +21,8 @@ const MenuCategories = () => {
   const selectedLocationId = getSelectedLocationId() as string;
 
   const [open, setOpen] = useState<boolean>(false);
+
+  const [openSuccessAlert, setOpenSuccessAlert] = useState(false);
 
   const validMenuCategories = getMenuCategoriesByLocationId(
     selectedLocationId,
@@ -67,7 +70,16 @@ const MenuCategories = () => {
           );
         })}
       </Box>
-      <NewMenuCategory open={open} setOpen={setOpen} />
+      <NewMenuCategory
+        open={open}
+        setOpen={setOpen}
+        setOpenSuccessAlert={setOpenSuccessAlert}
+      />
+      <SuccessAlert
+        open={openSuccessAlert}
+        setOpen={setOpenSuccessAlert}
+        message="New menu category successfully created"
+      />
     </Box>
   );
 };

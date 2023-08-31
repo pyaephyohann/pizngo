@@ -20,9 +20,10 @@ import { useState } from "react";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
+  setOpenSuccessAlert: (value: boolean) => void;
 }
 
-const NewAddon = ({ open, setOpen }: Props) => {
+const NewAddon = ({ open, setOpen, setOpenSuccessAlert }: Props) => {
   const { addonCategories } = useAppSelector(appData);
 
   const dispatch = useAppDispatch();
@@ -45,6 +46,9 @@ const NewAddon = ({ open, setOpen }: Props) => {
     dispatch(addAddon(createdAddon));
     setNewAddon({ ...newAddon, name: "", price: 0 });
     setOpen(false);
+    if (response.status === 200) {
+      setOpenSuccessAlert(true);
+    }
   };
 
   const isDisabled = !newAddon.name || !newAddon.addonCategoryId;
