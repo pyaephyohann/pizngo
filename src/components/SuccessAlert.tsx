@@ -32,7 +32,11 @@ const SuccessAlert = ({ open, setOpen, message }: Props) => {
   return (
     <Stack spacing={2} sx={{ width: "100%" }}>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+        <Alert
+          onClose={handleClose}
+          severity="success"
+          sx={{ width: "100%", color: "#fff" }}
+        >
           {message}
         </Alert>
       </Snackbar>
