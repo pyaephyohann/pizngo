@@ -7,10 +7,15 @@ import EggIcon from "@mui/icons-material/Egg";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import NewAddon from "./NewAddon";
+import Loading from "@/components/Loading";
 
 const Addons = () => {
-  const { addons, menusAddonCategories, menusMenuCategoriesLocations } =
-    useAppSelector(appData);
+  const {
+    isLoading,
+    addons,
+    menusAddonCategories,
+    menusMenuCategoriesLocations,
+  } = useAppSelector(appData);
 
   const selectedLocationId = getSelectedLocationId() as string;
 
@@ -22,6 +27,8 @@ const Addons = () => {
     menusMenuCategoriesLocations,
     selectedLocationId
   );
+
+  if (isLoading) return <Loading />;
 
   return (
     <Box>

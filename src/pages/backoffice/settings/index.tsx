@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import { config } from "@/config";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { appData, selectLocations } from "@/store/slices/appSlice";
@@ -18,7 +19,7 @@ import { Companies, Locations } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 const Settings = () => {
-  const { company, locations } = useAppSelector(appData);
+  const { isLoading, company, locations } = useAppSelector(appData);
   const [newCompany, setNewCompany] = useState<Companies>();
   const [selectedLocation, setSelectedLocation] = useState<Locations>();
   const dispatch = useAppDispatch();
@@ -61,7 +62,10 @@ const Settings = () => {
     setSelectedLocation(selectedLocation);
   };
 
+  if (isLoading) return <Loading />;
+
   if (!company) return null;
+
   return (
     <Box
       sx={{

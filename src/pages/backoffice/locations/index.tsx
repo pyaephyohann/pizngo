@@ -6,10 +6,14 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import NewLocation from "./NewLocation";
+import Loading from "@/components/Loading";
 
 const Locations = () => {
-  const { locations } = useAppSelector(appData);
+  const { isLoading, locations } = useAppSelector(appData);
   const [open, setOpen] = useState<boolean>(false);
+
+  if (isLoading) return <Loading />;
+
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: "1rem" }}>

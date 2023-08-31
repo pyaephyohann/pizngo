@@ -7,9 +7,10 @@ import TableBarIcon from "@mui/icons-material/TableBar";
 import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import NewTable from "./NewTable";
+import Loading from "@/components/Loading";
 
 const Tables = () => {
-  const { tables } = useAppSelector(appData);
+  const { isLoading, tables } = useAppSelector(appData);
   const selectedLocationId = getSelectedLocationId();
 
   const [open, setOpen] = useState<boolean>(false);
@@ -17,6 +18,8 @@ const Tables = () => {
   const validTables = tables.filter(
     (item) => item.locationId === Number(selectedLocationId)
   );
+
+  if (isLoading) return <Loading />;
 
   return (
     <Box>

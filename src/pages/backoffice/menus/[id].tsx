@@ -17,6 +17,7 @@ import { removeMenu, updateMenu } from "@/store/slices/menusSlice";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "@/components/DeleteDialog";
 import { fetchMenusMenuCategoriesLocations } from "@/store/slices/menusMenuCategoriesLocationsSlice";
+import Loading from "@/components/Loading";
 
 const EditMenu = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const EditMenu = () => {
 
   const selectedLocationId = getSelectedLocationId() as string;
 
-  const { menus, menusAddonCategories, addonCategories } =
+  const { isLoading, menus, menusAddonCategories, addonCategories } =
     useAppSelector(appData);
 
   const menuIds = menus.map((item) => item.id);
@@ -91,6 +92,8 @@ const EditMenu = () => {
 
   const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
   const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
+  if (isLoading) return <Loading />;
 
   if (!menu) return null;
 

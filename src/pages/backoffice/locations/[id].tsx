@@ -8,12 +8,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "@/components/DeleteDialog";
+import Loading from "@/components/Loading";
 
 const EditLocation = () => {
   const router = useRouter();
   const locationId = router.query.id;
   const [location, setLocation] = useState<Locations>();
-  const { locations } = useAppSelector(appData);
+  const { isLoading, locations } = useAppSelector(appData);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState<boolean>(false);
 
@@ -47,6 +48,8 @@ const EditLocation = () => {
     location && dispatch(removeLocation(location));
     router.push("/backoffice/locations");
   };
+
+  if (isLoading) return <Loading />;
 
   if (!location) return null;
 

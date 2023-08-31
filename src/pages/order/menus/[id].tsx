@@ -19,12 +19,13 @@ import { AddonCategories, Addons } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Loading from "@/components/Loading";
 
 const Menu = () => {
   const router = useRouter();
   const query = router.query;
   const menuId = query.id as string;
-  const { menus, addonCategories, addons, menusAddonCategories } =
+  const { isLoading, menus, addonCategories, addons, menusAddonCategories } =
     useAppSelector(appData);
 
   const dispatch = useAppDispatch();
@@ -172,6 +173,8 @@ const Menu = () => {
       </FormControl>
     );
   };
+
+  if (isLoading) return <Loading />;
 
   if (!menu) return <Box>Menu not found</Box>;
 

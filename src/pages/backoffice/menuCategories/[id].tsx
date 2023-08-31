@@ -32,6 +32,7 @@ import { MenuCategories, Menus } from "@prisma/client";
 import RemoveMenuFromMenuCategory from "./RemoveMenuFromMenuCategory";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "@/components/DeleteDialog";
+import Loading from "@/components/Loading";
 
 const EditMenuCategory = () => {
   const router = useRouter();
@@ -46,8 +47,13 @@ const EditMenuCategory = () => {
 
   const [selectedMenuToRemove, setSelectedMenuToRemove] = useState<Menus>();
 
-  const { menuCategories, menus, menusMenuCategoriesLocations, locations } =
-    useAppSelector(appData);
+  const {
+    isLoading,
+    menuCategories,
+    menus,
+    menusMenuCategoriesLocations,
+    locations,
+  } = useAppSelector(appData);
 
   const menuCategoryId = router.query.id as string;
 
@@ -125,6 +131,8 @@ const EditMenuCategory = () => {
     dispatch(fetchMenusMenuCategoriesLocations(selectedLocationId));
     router.push("/backoffice/menuCategories");
   };
+
+  if (isLoading) return <Loading />;
 
   if (!menuCategory) return null;
 

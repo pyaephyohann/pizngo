@@ -7,11 +7,13 @@ import ClassIcon from "@mui/icons-material/Class";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import NewAddonCategory from "./NewAddonCategory";
+import Loading from "@/components/Loading";
 
 const AddonCategories = () => {
   const selectedLocationId = getSelectedLocationId();
 
   const {
+    isLoading,
     menusMenuCategoriesLocations,
     menus,
     menusAddonCategories,
@@ -40,6 +42,8 @@ const AddonCategories = () => {
     return addons.filter((item) => item.addonCategoryId === addonCategoryId)
       .length;
   };
+
+  if (isLoading) return <Loading />;
 
   return (
     <Box>
