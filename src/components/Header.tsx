@@ -1,7 +1,7 @@
 import { Box, Slide, Typography } from "@mui/material";
 import Image from "next/image";
-import PandaCooking from "../assets/panda-cooking.png";
 import Wave from "../assets/wave.svg";
+import PandaCooking from "../assets/panda-cooking.png";
 
 const Header = () => {
   return (

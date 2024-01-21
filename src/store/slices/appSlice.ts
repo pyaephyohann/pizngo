@@ -40,9 +40,11 @@ export const fetchAppData = createAsyncThunk(
   "app/fetchAppData",
   async (payload: FetchAppPayload, thunkAPI) => {
     thunkAPI.dispatch(setAppLoading(true));
-    const response = await fetch(
-      `${config.apiBaseUrl}/app?locationId=${payload.locationId}`
-    );
+    const response = await fetch("https://api.pokemontcg.io/v2/cards", {
+      headers: {
+        "X-Api-Key": "517542de-22c9-426b-9b1d-4e9b3765f9ed",
+      },
+    });
     const responseJson = await response.json();
     const {
       user,

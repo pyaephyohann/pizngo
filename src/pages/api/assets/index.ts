@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { fileUpload } from "@/utils/server";
 import { Request, Response } from "express";
 import type { NextApiRequest, NextApiResponse } from "next";

@@ -150,7 +150,6 @@ const EditMenu = () => {
               placeholder="Price"
             />
           </Box>
-
           <Box>
             <Autocomplete
               multiple
